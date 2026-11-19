@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -177,7 +179,11 @@ private fun DayCell(
         base.clip(RoundedCornerShape(skin.cellCorner)).background(skin.cellColor)
     } else {
         val linea = skin.dividerColor
-        base.drawBehind { drawLine(linea, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth = 1.dp.toPx()) }
+        val vertical = skin.verticalLines
+        base.drawBehind {
+            drawLine(linea, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth = 1.dp.toPx())
+            if (vertical) drawLine(linea, Offset(0f, 0f), Offset(0f, size.height), strokeWidth = 1.dp.toPx())
+        }
     }
     Box(shaped.clickable(onClick = onClick)) {
         Column(Modifier.fillMaxSize().padding(top = 4.dp), horizontalAlignment = Alignment.CenterHorizontally) {
@@ -195,14 +201,23 @@ private fun DayCell(
                     fontSize = 15.sp, fontWeight = FontWeight.Medium, maxLines = 1, softWrap = false,
                 )
             }
-            if (event != null) {
-                Box(
+            if (event != null) when (skin.eventStyle) {
+                EventStyle.BAND -> Box(
                     Modifier.padding(top = 3.dp, start = 1.dp, end = 1.dp).fillMaxWidth()
                         .clip(RoundedCornerShape(skin.chipCorner)).background(skin.chipColor)
                         .padding(horizontal = 3.dp, vertical = 1.dp),
                 ) {
                     Text(event.title, color = skin.onChip, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Clip)
                 }
+                EventStyle.TEXT -> Text(
+                    event.title, Modifier.fillMaxWidth().padding(top = 3.dp, start = 2.dp, end = 1.dp),
+                    color = skin.chipColor.let { if (skin.background.luminance() < 0.5f) it.copy(alpha = 1f) else it },
+                    fontSize = 11.sp, lineHeight = 13.sp, maxLines = 2, overflow = TextOverflow.Clip,
+                )
+                EventStyle.DOT -> Box(
+                    Modifier.padding(top = 3.dp).size(5.dp).clip(CircleShape)
+                        .background(if (skin.chrome == Chrome.XIAOMI) skin.textColor else skin.accent.copy(alpha = 0.45f)),
+                )
             }
         }
     }

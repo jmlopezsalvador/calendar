@@ -18,6 +18,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -29,9 +32,11 @@ import kotlinx.datetime.LocalDate
 
 /** Título del mes que se muestra en la cabecera (la marca decide mayúsculas y si lleva año). */
 private fun tituloMes(skin: CalendarSkin, d: LocalDate, today: LocalDate): String {
+    if (skin.chrome == Chrome.XIAOMI) return "${d.year} ${nombreMes(d.monthNumber).take(3)}"
+    if (skin.chrome == Chrome.HUAWEI) return "${nombreMes(d.monthNumber).take(3)}. ${d.year}"
     var t = nombreMes(d.monthNumber)
     if (skin.headerUppercase) t = t.uppercase()
-    if (skin.chrome != Chrome.APPLE && d.year != today.year) t += " ${d.year}"
+    if (skin.chrome != Chrome.APPLE && skin.chrome != Chrome.BUSINESS && skin.chrome != Chrome.ACALENDAR && d.year != today.year) t += " ${d.year}"
     return t
 }
 
@@ -97,7 +102,77 @@ fun CalendarHeader(skin: CalendarSkin, shown: LocalDate, today: LocalDate, onTit
                 fontSize = 32.sp, fontWeight = FontWeight.Bold, maxLines = 1,
             )
         }
+
+        Chrome.OPPO -> Row(
+            Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Ico.MENU, skin.textColor, 26.dp)
+            Spacer(Modifier.width(24.dp))
+            Text(titulo, titleMod.weight(1f), color = skin.textColor, fontSize = 24.sp, maxLines = 1)
+            Icon(Ico.SEARCH, skin.mutedColor, 26.dp)
+            Spacer(Modifier.width(18.dp))
+            DayIcon(today.dayOfMonth, skin.mutedColor)
+            Spacer(Modifier.width(14.dp))
+            Icon(Ico.MORE, skin.mutedColor, 26.dp)
+        }
+        Chrome.XIAOMI -> Row(
+            Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 16.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(titulo, titleMod.weight(1f), color = skin.textColor, fontSize = 22.sp, maxLines = 1)
+            Icon(Ico.CALENDAR, skin.textColor, 26.dp)
+            Spacer(Modifier.width(18.dp))
+            Icon(Ico.MORE, skin.textColor, 26.dp)
+        }
+        Chrome.HUAWEI -> Column(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 12.dp)) {
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text(titulo, titleMod, color = skin.textColor, fontSize = 26.sp, fontWeight = FontWeight.Medium, maxLines = 1)
+                Spacer(Modifier.width(6.dp))
+                Icon(Ico.DROPDOWN, skin.textColor, 18.dp)
+                Spacer(Modifier.weight(1f))
+                Icon(Ico.SEARCH, skin.textColor, 26.dp)
+                Spacer(Modifier.width(22.dp))
+                Icon(Ico.MORE_GRID, skin.textColor, 26.dp)
+            }
+            Row(Modifier.fillMaxWidth().padding(top = 14.dp, bottom = 8.dp), horizontalArrangement = Arrangement.SpaceBetween) {
+                for ((i, t) in listOf("Año", "Mes", "Semana", "Día", "Agenda").withIndex()) {
+                    Text(
+                        t, fontSize = 16.sp, color = if (i == 1) skin.accent else skin.mutedColor,
+                        modifier = if (i == 1) Modifier.drawUnderline(skin.accent) else Modifier,
+                    )
+                }
+            }
+        }
+        Chrome.BUSINESS, Chrome.ACALENDAR -> Row(
+            Modifier.fillMaxWidth().background(skin.headerBg ?: skin.background).padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(Ico.MENU, skin.onHeader, 26.dp)
+            Spacer(Modifier.width(22.dp))
+            Column(titleMod.weight(1f)) {
+                Text(nombreMes(shown.monthNumber), color = skin.onHeader, fontSize = 22.sp, maxLines = 1)
+                Text("${shown.year}", color = skin.onHeader.copy(alpha = 0.7f), fontSize = 18.sp, maxLines = 1)
+            }
+            if (skin.chrome == Chrome.ACALENDAR) { Icon(Ico.PLUS, skin.onHeader, 26.dp); Spacer(Modifier.width(14.dp)) }
+            DayIcon(today.dayOfMonth, skin.onHeader)
+            Spacer(Modifier.width(14.dp))
+            Icon(if (skin.chrome == Chrome.ACALENDAR) Ico.SEARCH else Ico.LIST, skin.onHeader, 26.dp)
+            Spacer(Modifier.width(6.dp))
+            Icon(Ico.MORE, skin.onHeader, 26.dp)
+        }
+        Chrome.MOCA -> Row(
+            Modifier.fillMaxWidth().background(skin.headerBg ?: skin.background).padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(titulo, titleMod.weight(1f), color = skin.onHeader, fontSize = 20.sp, fontWeight = FontWeight.Medium, maxLines = 1)
+        }
     }
+}
+
+/** Subrayado de la pestaña activa. */
+private fun Modifier.drawUnderline(color: Color): Modifier = this.drawBehind {
+    drawLine(color, Offset(0f, size.height + 6.dp.toPx()), Offset(size.width, size.height + 6.dp.toPx()), strokeWidth = 2.dp.toPx())
 }
 
 /** Píldora clara con sombra suave de los botones de Apple. */
@@ -141,5 +216,28 @@ fun BoxScope.CalendarOverlay(skin: CalendarSkin, today: LocalDate) {
                 Icon(Ico.TRAY, skin.textColor, 26.dp)
             }
         }
+
+        Chrome.OPPO -> Box(
+            Modifier.align(Alignment.BottomEnd).padding(20.dp).size(56.dp).shadow(6.dp, CircleShape).clip(CircleShape).background(Color.White),
+            contentAlignment = Alignment.Center,
+        ) { Icon(Ico.PLUS, Color(0xFF1A73E8), 28.dp) }
+
+        Chrome.XIAOMI -> Box(
+            Modifier.align(Alignment.BottomEnd).padding(24.dp).size(56.dp).shadow(6.dp, CircleShape).clip(CircleShape).background(Color(0xFF2B2B2D)),
+            contentAlignment = Alignment.Center,
+        ) { Icon(Ico.PLUS, skin.accent, 28.dp) }
+
+        Chrome.HUAWEI -> Box(
+            Modifier.align(Alignment.BottomEnd).padding(24.dp).size(56.dp).shadow(6.dp, CircleShape).clip(CircleShape).background(skin.accent),
+            contentAlignment = Alignment.Center,
+        ) { Icon(Ico.PLUS, Color.White, 28.dp) }
+
+        Chrome.BUSINESS, Chrome.ACALENDAR -> Box(
+            Modifier.align(Alignment.BottomEnd).padding(24.dp).size(58.dp).shadow(6.dp, CircleShape).clip(CircleShape)
+                .background(if (skin.chrome == Chrome.BUSINESS) Color.Black else Color(0xFF3A3A3A)),
+            contentAlignment = Alignment.Center,
+        ) { Icon(Ico.PLUS, Color.White, 28.dp) }
+
+        Chrome.MOCA -> Unit
     }
 }

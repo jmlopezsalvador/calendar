@@ -21,7 +21,9 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
 - **R2. Look and feel por marca.** Ajustes lista las marcas del kit y permite elegir una. Solo se replica la **pantalla del calendario**
   (vista mensual); el formulario de evento es común en estructura pero **tomando colores, tipografía y tipo de componentes de la marca elegida**.
   Marcas del kit: Samsung, Apple, Google, Xiaomi, OPPO (= Google), Huawei, Business Calendar 2, Monthly Calendar Moca, aCalendar.
-- **R2b. Acceso a Ajustes oculto:** pulsación larga en el título del mes (el espectador no ve ningún botón de ajustes).
+- **R2b. Acceso a Ajustes oculto:** pulsación larga en cualquier punto de la cabecera (el espectador no ve ningún botón de ajustes). Vibración doble al entrar.
+- **R2c. Reinicio del efecto:** pulsación larga en la esquina superior izquierda de la cabecera (zona invisible) borra el «Feliz cumpleaños» forzado y el evento de prueba que lo originó, para repetir el efecto; el resto de eventos se conserva. Vibración doble al reiniciar.
+- **R1b. Cambio de nombre/icono:** al elegir uno en Ajustes sale un modal que explica el cambio y avisa de que la app se reiniciará (Cancelar / Aplicar). iOS solo permite cambiar el icono, no el nombre.
 - **R3. Detección automática del sistema.** Opción «Automático» (por defecto): Android → plantilla Google (o Samsung/Xiaomi/Huawei/OPPO
   según `Build.MANUFACTURER`); iOS → Apple. El usuario puede cambiarla.
 - **R4. Vista mensual continua.** Al abrir, calendario mensual con scroll continuo entre meses (semanas contiguas que cruzan el límite de mes).

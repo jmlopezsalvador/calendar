@@ -101,6 +101,19 @@ class MagicEngine(private val repo: EventRepository) {
         removeForcedBy(date)
     }
 
+    /**
+     * Reinicia el efecto para poder repetirlo: borra los eventos forzados y los eventos de prueba (día clave) que
+     * los originaron. El resto de eventos (los de relleno) se conservan.
+     */
+    fun reset() {
+        for (e in repo.all()) {
+            val source = e.forcedFrom ?: continue
+            repo.remove(e.date)
+            val test = repo.get(source)
+            if (source != e.date && test != null && !test.isForced) repo.remove(source)
+        }
+    }
+
     /** Forzado manual (casos sin código, SPEC §4): cumpleaños y carta fijados a mano. */
     fun forceAt(birthday: LocalDate, card: Card, source: LocalDate = birthday) {
         repo.put(forcedEvent(birthday, card, source))

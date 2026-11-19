@@ -12,12 +12,14 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.calendar.domain.AppIdentity
 import com.calendar.domain.RandomEvents
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -36,12 +38,23 @@ fun SettingsScreen(
     onChange: (AppSettings) -> Unit,
     /** Genera eventos: (meses atrás, meses adelante, % de días) → nº de eventos creados. */
     onGenerate: (Int, Int, Int) -> Int,
+    /** Forzado manual: (fecha del cumpleaños, carta) → true si se aplicó. */
+    onForce: (String, String) -> Boolean,
+    canRename: Boolean,
+    restartsApp: Boolean,
+    /** Aplica nombre e icono (ids). */
+    onApplyIdentity: (String, String) -> Unit,
     onClose: () -> Unit,
 ) {
     var atras by remember { mutableStateOf(1) }
     var adelante by remember { mutableStateOf(3) }
     var porcentaje by remember { mutableStateOf(30) }
     var resultado by remember { mutableStateOf<String?>(null) }
+    var fuerzaFecha by remember { mutableStateOf("") }
+    var fuerzaCarta by remember { mutableStateOf("") }
+    var fuerzaMsg by remember { mutableStateOf<String?>(null) }
+    // Cambio pendiente de confirmar: (nombre, icono) propuestos.
+    var pendiente by remember { mutableStateOf<Pair<String, String>?>(null) }
     val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
     Column(Modifier.fillMaxSize().background(Color.White).windowInsetsPadding(WindowInsets.systemBars)) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -70,6 +83,21 @@ fun SettingsScreen(
             Deslizador("Altura de fila (modo vertical)", settings.rowDp ?: skin.rowHeight.value.toInt(), 60..160) { onChange(settings.copy(rowDp = it)) }
             TextButton(onClick = { onChange(settings.clearTweaks()) }) { Text("Restablecer ajuste fino") }
 
+            if (canRename) {
+                Titulo("Nombre de la app")
+                for (o in AppIdentity.names) {
+                    Opcion(o.nombre, settings.appName == o.id) {
+                        if (settings.appName != o.id) pendiente = o.id to settings.appIcon
+                    }
+                }
+            }
+            Titulo("Icono de la app")
+            for (o in AppIdentity.icons) {
+                Opcion(o.nombre, settings.appIcon == o.id) {
+                    if (settings.appIcon != o.id) pendiente = settings.appName to o.id
+                }
+            }
+
             Titulo("Eventos aleatorios")
             Text("Temas (uno por línea)", fontSize = 15.sp, color = Color.Black)
             OutlinedTextField(
@@ -86,7 +114,36 @@ fun SettingsScreen(
                 resultado = "Creados $n eventos (los días ocupados no se tocan)."
             }) { Text("Generar eventos") }
             resultado?.let { Text(it, fontSize = 14.sp, color = Color(0xFF5F6368), modifier = Modifier.padding(bottom = 24.dp)) }
+
+            Titulo("Forzado manual (cumpleaños sin día clave)")
+            OutlinedTextField(
+                fuerzaFecha, { fuerzaFecha = it }, Modifier.fillMaxWidth(), singleLine = true,
+                label = { Text("Fecha del cumpleaños (dd/mm/aaaa)") },
+            )
+            OutlinedTextField(
+                fuerzaCarta, { fuerzaCarta = it }, Modifier.fillMaxWidth().padding(top = 8.dp), singleLine = true,
+                label = { Text("Carta (por ejemplo 8C, QT, 0P)") },
+            )
+            TextButton(onClick = {
+                fuerzaMsg = if (onForce(fuerzaFecha, fuerzaCarta)) "Forzado aplicado." else "Fecha o carta no válidas."
+            }) { Text("Forzar") }
+            fuerzaMsg?.let { Text(it, fontSize = 14.sp, color = Color(0xFF5F6368), modifier = Modifier.padding(bottom = 24.dp)) }
         }
+    }
+    pendiente?.let { (n, i) ->
+        AlertDialog(
+            onDismissRequest = { pendiente = null },
+            title = { Text("Cambiar nombre e icono") },
+            text = {
+                Text(
+                    "La app pasará a llamarse «${AppIdentity.nameLabel(n)}» con el icono «${AppIdentity.iconLabel(i)}».\n\n" +
+                        if (restartsApp) "Para hacerlo efectivo la app se reiniciará. ¿Quieres aplicarlo ahora?"
+                        else "El sistema puede mostrar un aviso al cambiar el icono. ¿Quieres aplicarlo ahora?",
+                )
+            },
+            confirmButton = { TextButton(onClick = { pendiente = null; onApplyIdentity(n, i) }) { Text("Aplicar") } },
+            dismissButton = { TextButton(onClick = { pendiente = null }) { Text("Cancelar") } },
+        )
     }
 }
 

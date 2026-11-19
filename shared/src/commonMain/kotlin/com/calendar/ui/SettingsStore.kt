@@ -22,6 +22,9 @@ data class AppSettings(
     val rowDp: Int? = null,
     /** Temas de los eventos aleatorios, uno por línea (null = los de por defecto). */
     val topics: String? = null,
+    /** Nombre e icono de la app (ids de AppIdentity). */
+    val appName: String = "calendar",
+    val appIcon: String = "google",
 ) {
     companion object {
         const val AUTO = "auto"
@@ -48,6 +51,8 @@ class SettingsStore(private val prefs: KeyValueStore) {
         scroll = prefs.getString("scroll") ?: AppSettings.AUTO,
         cornerDp = opt("tw_corner"), gapDp = opt("tw_gap"), rowDp = opt("tw_row"),
         topics = prefs.getString("topics")?.takeIf { it.isNotBlank() },
+        appName = prefs.getString("app_name") ?: "calendar",
+        appIcon = prefs.getString("app_icon") ?: "google",
     )
 
     fun save(s: AppSettings) {
@@ -55,5 +60,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
         prefs.putString("scroll", s.scroll)
         put("tw_corner", s.cornerDp); put("tw_gap", s.gapDp); put("tw_row", s.rowDp)
         prefs.putString("topics", s.topics ?: "")
+        prefs.putString("app_name", s.appName)
+        prefs.putString("app_icon", s.appIcon)
     }
 }

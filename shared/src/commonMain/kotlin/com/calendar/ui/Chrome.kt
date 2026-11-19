@@ -46,7 +46,8 @@ private fun tituloMes(skin: CalendarSkin, d: LocalDate, today: LocalDate): Strin
  */
 @Composable
 fun CalendarHeader(skin: CalendarSkin, shown: LocalDate, today: LocalDate, onTitleLongPress: () -> Unit) {
-    val titleMod = Modifier.pointerInput(Unit) { detectTapGestures(onLongPress = { onTitleLongPress() }) }
+    // La pulsación larga la gestiona CalendarScreen sobre toda la cabecera (Ajustes) y su esquina (reinicio).
+    val titleMod = Modifier
     val titulo = tituloMes(skin, shown, today)
     when (skin.chrome) {
         Chrome.GOOGLE -> Row(

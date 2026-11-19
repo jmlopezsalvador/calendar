@@ -72,12 +72,21 @@ fun CalendarScreen(
     events: (LocalDate) -> CalendarEvent?,
     onDayClick: (LocalDate) -> Unit,
     onTitleLongPress: () -> Unit,
+    onCornerLongPress: () -> Unit = {},
 ) {
     var shown by remember { mutableStateOf(today) }
     Box(Modifier.fillMaxSize().background(skin.background).windowInsetsPadding(WindowInsets.systemBars)) {
         Column(Modifier.fillMaxSize()) {
             // Pulsación larga en CUALQUIER punto de la cabecera abre los Ajustes (los botones son solo atrezo).
-            Box(Modifier.fillMaxWidth().pointerInput(Unit) { detectTapGestures(onLongPress = { onTitleLongPress() }) }) {
+            Box(
+                Modifier.fillMaxWidth().pointerInput(Unit) {
+                    // Esquina superior izquierda (invisible) = reinicio del efecto; el resto de la cabecera = Ajustes.
+                    val esquina = 72.dp.toPx()
+                    detectTapGestures(onLongPress = { p ->
+                        if (p.x < esquina && p.y < esquina) onCornerLongPress() else onTitleLongPress()
+                    })
+                },
+            ) {
                 CalendarHeader(skin, shown, today, onTitleLongPress)
             }
             Row(Modifier.fillMaxWidth().padding(horizontal = skin.cellGap + 4.dp)) {

@@ -8,6 +8,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.calendar.domain.EventRepository
 import com.calendar.domain.MagicEngine
+import com.calendar.domain.ManualForce
 import com.calendar.domain.RandomEvents
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -19,7 +20,7 @@ import kotlinx.datetime.todayIn
 
 /** Raíz Compose común (Android e iOS): calendario mensual continuo + formulario de evento. */
 @Composable
-fun CalendarRoot(prefs: KeyValueStore) {
+fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformActions) {
     val repo = remember { EventRepository(prefs) }
     val engine = remember { MagicEngine(repo) }
     val today = remember { Clock.System.todayIn(TimeZone.currentSystemDefault()) }
@@ -46,11 +47,22 @@ fun CalendarRoot(prefs: KeyValueStore) {
                     version++
                     n
                 },
+                canRename = platform.canRename, restartsApp = platform.restartsApp,
+                onApplyIdentity = { n, i ->
+                    val nuevo = settings.copy(appName = n, appIcon = i)
+                    settings = nuevo; settingsStore.save(nuevo)
+                    platform.applyIdentity(n, i)
+                },
+                onForce = { f, c -> ManualForce.apply(engine, f, c).also { if (it) version++ } },
                 onClose = { showSettings = false },
             )
             return@MaterialTheme
         }
-        CalendarScreen(skin, horizontal, today, events = { repo.get(it) }, onDayClick = { editing = it }, onTitleLongPress = { showSettings = true })
+        // La lambda cambia con cada versión para que las celdas ya compuestas se repinten tras guardar/reiniciar.
+        val eventos = remember(version) { { d: LocalDate -> repo.get(d) } }
+        CalendarScreen(skin, horizontal, today, events = eventos, onDayClick = { editing = it }, onTitleLongPress = { platform.doubleVibrate(); showSettings = true },
+            onCornerLongPress = { engine.reset(); version++; platform.doubleVibrate() },
+        )
         editing?.let { d ->
             EventEditor(
                 skin, d, repo.get(d),

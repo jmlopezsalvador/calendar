@@ -94,4 +94,26 @@ class EventsTest {
         assertEquals("Feliz cumple editado", repo.get(cumple)?.title)
         assertNull(repo.get(KeyDay.birthdayFrom(cumple)))
     }
+
+    @Test
+    fun resetBorraElForzadoYElEventoDePruebaPeroNoElRelleno() {
+        val repo = EventRepository(MemoryStore())
+        val engine = MagicEngine(repo)
+        repo.put(CalendarEvent(LocalDate(2026, 11, 3), "Dentista"))
+        engine.save(LocalDate(2026, 11, 19), "prueba 8C", "")
+        assertEquals("Feliz cumpleaños", repo.get(LocalDate(2027, 1, 26))?.title)
+        engine.reset()
+        assertNull(repo.get(LocalDate(2027, 1, 26)))
+        assertNull(repo.get(LocalDate(2026, 11, 19)))
+        assertEquals("Dentista", repo.get(LocalDate(2026, 11, 3))?.title)
+    }
+
+    @Test
+    fun resetTambienQuitaElForzadoManual() {
+        val repo = EventRepository(MemoryStore())
+        val engine = MagicEngine(repo)
+        engine.forceAt(LocalDate(2027, 4, 30), Card.fromText("QT")!!)
+        engine.reset()
+        assertTrue(repo.all().isEmpty())
+    }
 }

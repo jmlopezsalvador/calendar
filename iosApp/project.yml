@@ -13,6 +13,28 @@ targets:
       path: iosApp/Info.plist
       properties:
         CFBundleDisplayName: Calendar
+        CFBundleIcons:
+          CFBundleAlternateIcons:
+            alt_google:
+              CFBundleIconFiles: [alt_google]
+            alt_samsung:
+              CFBundleIconFiles: [alt_samsung]
+            alt_apple:
+              CFBundleIconFiles: [alt_apple]
+            alt_xiaomi:
+              CFBundleIconFiles: [alt_xiaomi]
+            alt_xiaomi_google:
+              CFBundleIconFiles: [alt_xiaomi_google]
+            alt_oppo_google:
+              CFBundleIconFiles: [alt_oppo_google]
+            alt_huawei:
+              CFBundleIconFiles: [alt_huawei]
+            alt_business:
+              CFBundleIconFiles: [alt_business]
+            alt_moca:
+              CFBundleIconFiles: [alt_moca]
+            alt_acalendar:
+              CFBundleIconFiles: [alt_acalendar]
         UILaunchScreen: {}
         UIRequiresFullScreen: true
         UIStatusBarHidden: true

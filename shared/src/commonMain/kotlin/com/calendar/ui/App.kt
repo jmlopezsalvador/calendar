@@ -1,37 +1,39 @@
 package com.calendar.ui
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import com.calendar.domain.EventRepository
+import com.calendar.domain.MagicEngine
+import kotlinx.datetime.Clock
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.todayIn
 
-/** Raíz Compose común (Android e iOS). Pantalla de ejemplo: un contador que se guarda en local. */
+/** Raíz Compose común (Android e iOS): calendario mensual continuo + formulario de evento. */
 @Composable
-fun CalendarRoot(store: SettingsStore) {
-    var settings by remember { mutableStateOf(store.load()) }
+fun CalendarRoot(prefs: KeyValueStore) {
+    val repo = remember { EventRepository(prefs) }
+    val engine = remember { MagicEngine(repo) }
+    val today = remember { Clock.System.todayIn(TimeZone.currentSystemDefault()) }
+    val skin = Skins.Google
+    // Cada guardado incrementa la versión para recomponer las celdas.
+    var version by remember { mutableStateOf(0) }
+    var editing by remember { mutableStateOf<LocalDate?>(null) }
     SystemBarsEffect()
     MaterialTheme {
-        Column(
-            Modifier.fillMaxSize().background(Color.Black),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            Text("Calendar", color = Color.White)
-            Text("Pulsaciones: ${settings.counter}", color = Color.White)
-            Button(onClick = { settings = settings.copy(counter = settings.counter + 1).also(store::save) }) {
-                Text("Sumar")
-            }
+        @Suppress("UNUSED_EXPRESSION") version
+        CalendarScreen(skin, today, events = { repo.get(it) }, onDayClick = { editing = it })
+        editing?.let { d ->
+            EventEditor(
+                skin, d, repo.get(d),
+                onSave = { t, n -> engine.save(d, t, n); version++; editing = null },
+                onDelete = { engine.delete(d); version++; editing = null },
+                onDismiss = { editing = null },
+            )
         }
     }
 }

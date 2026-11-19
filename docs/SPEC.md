@@ -38,7 +38,7 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
 - **R9. Día clave → cumpleaños (ver §4).**
 - **R10. Carta.** El evento de prueba lleva un texto cualquiera; **sus dos últimas letras** codifican la carta: valor + palo.
   Valor: `A`/`1`=as, `2`–`9`, `0`/`T`=10 (`T` también por «ten»), `J`, `Q`, `K`. Palo: `C`=corazones, `P`=picas, `T`=tréboles, `D`=diamantes.
-  Ejemplos: `8C`=8♥, `7P`=7♠, `QT`=Q♣, `0T`=10♣, `1C`=A♥. Insensible a mayúsculas. Si las dos últimas letras no forman una carta válida,
+  Ejemplos: `8C`=8♥, `7P`=7♠, `QT`=Q♣, `0T`=10♣, `1C`=A♥. Insensible a mayúsculas y a espacios (`Q T` = `QT`). La carta se busca primero en la descripción y, si no hay, en el título. Si las dos últimas letras no forman una carta válida,
   no se fuerza nada (el evento es normal).
 - **R11. Mensaje final.** Al abrir el evento forzado se muestra «¡Feliz cumpleaños!» y el nombre de la carta en español
   (p. ej. «8 de corazones»). El aspecto debe parecer un evento normal con ese texto.
@@ -59,12 +59,13 @@ Definiciones: rejilla de semanas, cada celda es un día; «misma vertical» = mi
 |---|---|
 | 29 y 30 abril | febrero no tiene 29 (año no bisiesto) / 30 |
 | 31 agosto | junio no tiene 31 |
+| 31 enero | noviembre no tiene 31 |
 | 29 febrero | solo en bisiesto |
 
-**Propuesta (v1):** para el mago, si el día no existe, usar el **último día de ese mes** (28/29-feb, 30-jun) y mirar la celda de encima.
-En la app, al invertir, si `X + 7` cae en el último día de febrero o de junio, se interpreta como el **cumpleaños canónico más bajo**
-que ese día admite (p. ej. 28-feb → 28-abr; 30-jun → 30-ago), y para los casos que quedan sin código se ofrece un **forzado manual**:
-en Ajustes (oculto) o con pulsación larga se puede fijar a mano la fecha de forzado. Los casos 29/30-abr y 31-ago (y 29-feb) son raros
+**Propuesta (v1):** para el mago, si el día no existe, usar el **último día de ese mes** (28/29-feb, 30-jun, 30-nov) y mirar la celda de encima.
+En la app, al invertir, si `X + 7` cae en el último día de febrero, junio o noviembre, se interpreta como el **cumpleaños canónico más bajo**
+que ese día admite (p. ej. 28-feb → 28-abr; 30-jun → 30-ago; 30-nov → 30-ene), y para los casos que quedan sin código se ofrece un **forzado manual**:
+en Ajustes (oculto) o con pulsación larga se puede fijar a mano la fecha de forzado. Los casos 29/30-abr, 31-ago y 31-ene (y 29-feb) son raros
 y se resuelven con ese override. *Pendiente de validar; se itera si no convence.*
 
 Los tests unitarios de este algoritmo van en `commonTest` (bisiestos, fin de año, meses de 28/29/30/31 días, ida y vuelta).

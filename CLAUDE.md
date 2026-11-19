@@ -1,37 +1,7 @@
-# Proyecto móvil Android + iOS (plantilla)
+# Calendar — app móvil Android + iOS (herramienta de magia)
 
 App móvil para **Android y iOS** con un único código en Kotlin Multiplatform + Compose Multiplatform.
 El usuario habla español: responde y comenta el código en español.
-
-> **ESTADO: PLANTILLA SIN INICIALIZAR.** Mientras este bloque exista, el proyecto sigue siendo la plantilla genérica
-> (nombre `MiApp`, paquete `com.miapp`, pantalla de ejemplo). **Lo primero que debes hacer en la primera conversación es
-> seguir el apartado «Primer arranque». Cuando termines, borra este bloque y rellena «Qué hace la app».**
-
-## Primer arranque (haz esto antes de escribir nada de funcionalidad)
-1. **Saluda y explica brevemente** que el proyecto es una plantilla y que vas a inicializarlo. No empieces a programar todavía.
-2. **Pregunta (con `AskUserQuestion` si ayuda) lo imprescindible:**
-   - **Nombre de la app** (visible en el móvil y en el `.ipa`/APK) y, si no lo da, propón uno de una palabra.
-   - **Paquete / id**: propón `com.<nombre en minúsculas>` salvo que el usuario quiera otro (p. ej. `com.wikicode.<nombre>`).
-   - **Qué hace la app**: objetivo, para quién, pantallas principales, qué guarda en local, si usa sensores/vibración/
-     cámara/galería, si necesita red o cuentas (por defecto NO: todo en local), idiomas, orientación (por defecto vertical).
-   - **Plataformas**: Android + iOS (por defecto ambas) y si hay algo que solo exista en una.
-   - Si el usuario tiene ya un documento de especificaciones: que lo deje en `docs/SPEC.md` (o en `data/` y lo lees).
-3. **Escribe `docs/SPEC.md`** con lo que el usuario cuente (requisitos numerados, preguntas abiertas). Es la fuente de verdad funcional.
-4. **Renombra la plantilla** (todo a la vez, con un script, y compila después):
-   - `MiApp` → nombre real y `com.miapp` → paquete real en: `settings.gradle.kts` (`rootProject.name`), `app/build.gradle.kts`
-     (`namespace`, `applicationId`), `shared/build.gradle.kts` (`namespace`), `AndroidManifest.xml` (`label`, tema),
-     `res/values/themes.xml`, `iosApp/project.yml` (`bundleIdPrefix`, `CFBundleDisplayName`, `PRODUCT_BUNDLE_IDENTIFIER`,
-     `PRODUCT_NAME`), `.github/workflows/ios.yml` (`MiApp.app`, `MiApp.ipa`, nombre del artefacto) y los nombres `MiAppRoot`.
-   - **Mueve las carpetas de paquete** (`.../kotlin/com/miapp/` → `.../kotlin/<paquete>/`) en `app`, `shared/commonMain`,
-     `commonTest`, `androidMain` e `iosMain`, y cambia las líneas `package` / `import`.
-   - Cambia el nombre de las `SharedPreferences` (`"miapp"`) en `Platform.android.kt`.
-   - Sustituye también en `docs/ARQUITECTURA.md` (§ que mencionan `com.miapp` / `MiApp`) solo si el usuario quiere mantenerlo al día; no es obligatorio.
-5. **Compila y prueba** (ver «Compilar y probar»). La pantalla de ejemplo (contador) debe seguir funcionando; luego sustitúyela.
-6. **Git:** si no hay repo (`git init`), pide al usuario la URL del repo de GitHub, haz el primer commit y marca `gradlew` como
-   ejecutable: `git update-index --chmod=+x gradlew` (si no, el Mac de Actions da `Permission denied`).
-7. **Icono:** pide al usuario un icono (déjalo en `data/icon.png`). Hasta entonces hay un icono neutro de plantilla en
-   `app/src/main/res/mipmap-*` y `iosApp/iosApp/Assets.xcassets/AppIcon.appiconset` (fondo adaptativo `#00050E`).
-8. **Actualiza este `CLAUDE.md`:** borra el bloque «ESTADO: PLANTILLA», cambia el título y rellena «Qué hace la app».
 
 ## Mapa de carpetas
 | Carpeta | Para qué sirve |
@@ -58,7 +28,7 @@ El usuario habla español: responde y comenta el código en español.
 - Mantener este `CLAUDE.md` al día: al cambiar de forma relevante la app, el flujo o las decisiones, actualizarlo en la misma tarea.
 
 ## Qué hace la app
-*(Pendiente: rellenar tras el primer arranque con un resumen de `docs/SPEC.md`.)*
+Calendario **falso** para un efecto de magia: emula el look and feel de calendarios de varias marcas (kit en `data/visuals/Kit_calendarios`), guarda eventos (1 por día) y fuerza un «Feliz cumpleaños» + carta en el cumpleaños del espectador, deducido del día pulsado por el mago (día clave = celda encima de «cumpleaños − 2 meses»; carta = 2 últimas letras del texto del evento de prueba). Ajustes: marca/look, nombre e icono alternativos, eventos aleatorios. Detalle y algoritmo en `docs/SPEC.md`. App `Calendar`, paquete `com.calendar`.
 
 ## Reglas de código para que compile en iOS
 - En `commonMain`: nada de `java.*` ni `android.*`. Usar `kotlinx-datetime` (0.6.1), `kotlin.math.*` y, si hace falta aritmética
@@ -77,6 +47,7 @@ El usuario habla español: responde y comenta el código en español.
 - SDK de Android en `C:\Users\jmlop\AppData\Local\Android\Sdk`: crear `local.properties` con `sdk.dir=...` (ignorado por git).
 - `./gradlew.bat :shared:testDebugUnitTest assembleDebug` → APK en `app/build/outputs/apk/debug/app-debug.apk`.
   Copiar el APK a `data/android_build/` si se quiere conservar.
+- **Los emuladores se abren SIEMPRE con ventana visible** (nunca `-no-window` ni headless): el usuario tiene que ver la app para probarla. Al terminar de probar, ciérralos (`adb -s <id> emu kill`) salvo que pida dejarlos abiertos.
 - Emulador AVD `calcu` (Android 15), reutilizable. Poner la zona horaria `Europe/Madrid` (arranca en GMT). Gboard puede salir en negro (es del emulador).
 - `gh` en Windows: `C:\Program Files\GitHub CLI\gh.exe` (hace falta `gh auth login` una vez).
 - En Windows los destinos de iOS se ignoran (`kotlin.native.ignoreDisabledTargets=true`); Android compila y testea igual.

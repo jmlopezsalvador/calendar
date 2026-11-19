@@ -27,6 +27,11 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
 - **R4. Vista mensual continua.** Al abrir, calendario mensual con scroll continuo entre meses (semanas contiguas que cruzan el límite de mes).
   La dirección (vertical/horizontal) y el comportamiento (ajuste al mes, etc.) dependen de la marca; se define a partir de
   `data/visuals/Kit_calendarios` (`Ficha.md`, `Matriz_navegacion.csv`). Se ignoran iconos/elementos de login de usuario en las capturas.
+- **R14. Cabeceras y menús fieles (no funcionales).** Cada marca replica sus botones de cabecera, selector de mes, barra de acciones, botón flotante «+», etc.
+  (menú, búsqueda, «hoy», tareas, filtros…) dibujados con `Canvas`/`Path`, solo de atrezo. **Se omiten avatares/iconos de login de usuario.**
+- **R15. Desplazamiento configurable.** Ajuste: `Según la marca` (por defecto) / `Vertical continuo` (semanas contiguas) / `Horizontal` (paginado mes a mes).
+- **R16. Versiones y ajuste fino.** Una marca puede tener **variantes** (p. ej. «Google Calendar en Samsung»: celdas sin redondeo) y Ajustes permite afinar
+  detalles (redondeo, separación, altura de fila, elementos de cabecera visibles…) guardados como sobrescrituras de la skin.
 - **R5. Eventos.** Pulsar un día abre directamente el formulario (sin pantalla de resumen del día). Máximo **un evento por día**.
   Si el día ya tiene evento, el formulario se abre para modificarlo. El título del evento se ve como resumen dentro de la celda del día.
 - **R6. Formulario de evento (atrezo).** Título, texto/notas, y campos de relleno (todo el día, repetición, hora…) sin función real.

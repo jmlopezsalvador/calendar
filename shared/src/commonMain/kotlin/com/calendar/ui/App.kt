@@ -8,7 +8,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.calendar.domain.EventRepository
 import com.calendar.domain.MagicEngine
+import com.calendar.domain.RandomEvents
 import kotlinx.datetime.Clock
+import kotlinx.datetime.DateTimeUnit
+import kotlinx.datetime.minus
+import kotlinx.datetime.plus
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.todayIn
@@ -32,7 +36,18 @@ fun CalendarRoot(prefs: KeyValueStore) {
     MaterialTheme {
         @Suppress("UNUSED_EXPRESSION") version
         if (showSettings) {
-            SettingsScreen(settings, onChange = { settings = it; settingsStore.save(it) }, onClose = { showSettings = false })
+            SettingsScreen(
+                settings, onChange = { settings = it; settingsStore.save(it) },
+                onGenerate = { atras, adelante, pct ->
+                    val topics = RandomEvents.parseTopics(settings.topics ?: "").ifEmpty { RandomEvents.DEFAULT_TOPICS }
+                    val n = RandomEvents.fill(
+                        repo, today.minus(atras, DateTimeUnit.MONTH), today.plus(adelante, DateTimeUnit.MONTH), topics, pct,
+                    )
+                    version++
+                    n
+                },
+                onClose = { showSettings = false },
+            )
             return@MaterialTheme
         }
         CalendarScreen(skin, horizontal, today, events = { repo.get(it) }, onDayClick = { editing = it }, onTitleLongPress = { showSettings = true })

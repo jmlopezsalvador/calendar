@@ -12,7 +12,13 @@ import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import com.calendar.domain.RandomEvents
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -28,8 +34,14 @@ import androidx.compose.ui.unit.sp
 fun SettingsScreen(
     settings: AppSettings,
     onChange: (AppSettings) -> Unit,
+    /** Genera eventos: (meses atrás, meses adelante, % de días) → nº de eventos creados. */
+    onGenerate: (Int, Int, Int) -> Int,
     onClose: () -> Unit,
 ) {
+    var atras by remember { mutableStateOf(1) }
+    var adelante by remember { mutableStateOf(3) }
+    var porcentaje by remember { mutableStateOf(30) }
+    var resultado by remember { mutableStateOf<String?>(null) }
     val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
     Column(Modifier.fillMaxSize().background(Color.White).windowInsetsPadding(WindowInsets.systemBars)) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
@@ -57,6 +69,23 @@ fun SettingsScreen(
             Deslizador("Separación entre celdas", settings.gapDp ?: skin.cellGap.value.toInt(), 0..10) { onChange(settings.copy(gapDp = it)) }
             Deslizador("Altura de fila (modo vertical)", settings.rowDp ?: skin.rowHeight.value.toInt(), 60..160) { onChange(settings.copy(rowDp = it)) }
             TextButton(onClick = { onChange(settings.clearTweaks()) }) { Text("Restablecer ajuste fino") }
+
+            Titulo("Eventos aleatorios")
+            Text("Temas (uno por línea)", fontSize = 15.sp, color = Color.Black)
+            OutlinedTextField(
+                value = settings.topics ?: RandomEvents.DEFAULT_TOPICS.joinToString("\n"),
+                onValueChange = { onChange(settings.copy(topics = it)) },
+                modifier = Modifier.fillMaxWidth(), minLines = 4, maxLines = 8,
+            )
+            TextButton(onClick = { onChange(settings.copy(topics = null)) }) { Text("Restablecer temas") }
+            Deslizador("Meses hacia atrás desde hoy", atras, 0..12) { atras = it }
+            Deslizador("Meses hacia adelante desde hoy", adelante, 0..24) { adelante = it }
+            Deslizador("Días con evento (%)", porcentaje, 5..100) { porcentaje = it }
+            TextButton(onClick = {
+                val n = onGenerate(atras, adelante, porcentaje)
+                resultado = "Creados $n eventos (los días ocupados no se tocan)."
+            }) { Text("Generar eventos") }
+            resultado?.let { Text(it, fontSize = 14.sp, color = Color(0xFF5F6368), modifier = Modifier.padding(bottom = 24.dp)) }
         }
     }
 }

@@ -20,6 +20,8 @@ data class AppSettings(
     val cornerDp: Int? = null,
     val gapDp: Int? = null,
     val rowDp: Int? = null,
+    /** Temas de los eventos aleatorios, uno por línea (null = los de por defecto). */
+    val topics: String? = null,
 ) {
     companion object {
         const val AUTO = "auto"
@@ -45,11 +47,13 @@ class SettingsStore(private val prefs: KeyValueStore) {
         skinId = prefs.getString("skin") ?: AppSettings.AUTO,
         scroll = prefs.getString("scroll") ?: AppSettings.AUTO,
         cornerDp = opt("tw_corner"), gapDp = opt("tw_gap"), rowDp = opt("tw_row"),
+        topics = prefs.getString("topics")?.takeIf { it.isNotBlank() },
     )
 
     fun save(s: AppSettings) {
         prefs.putString("skin", s.skinId)
         prefs.putString("scroll", s.scroll)
         put("tw_corner", s.cornerDp); put("tw_gap", s.gapDp); put("tw_row", s.rowDp)
+        prefs.putString("topics", s.topics ?: "")
     }
 }

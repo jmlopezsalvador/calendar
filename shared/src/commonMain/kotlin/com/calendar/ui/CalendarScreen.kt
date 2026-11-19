@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -54,7 +55,6 @@ private val MESES = listOf(
     "enero", "febrero", "marzo", "abril", "mayo", "junio",
     "julio", "agosto", "septiembre", "octubre", "noviembre", "diciembre",
 )
-private val SEMANAS = List(5600) { it } // ~107 años desde el ancla
 private const val MESES_TOTALES = 1272 // 106 años desde enero de 2000
 
 fun nombreMes(m: Int) = MESES[m - 1].replaceFirstChar { it.uppercase() }
@@ -111,30 +111,65 @@ private fun weekStart(skin: CalendarSkin, d: LocalDate): LocalDate {
     return d.minus(offset, DateTimeUnit.DAY)
 }
 
+/** Primer día del mes número [idx] contando desde enero de 2000. */
+private fun monthStart(idx: Int) = LocalDate(2000 + idx / 12, idx % 12 + 1, 1)
+
+/** Filas (semanas) que ocupa el mes [first] con la skin dada: cada mes arranca en su propia fila. */
+private fun weeksOf(skin: CalendarSkin, first: LocalDate): Int {
+    val days = first.daysUntil(first.plus(1, DateTimeUnit.MONTH))
+    return (weekStart(skin, first).daysUntil(first) + days + 6) / 7
+}
+
+/**
+ * Desplazamiento vertical continuo. Como en los calendarios originales, **cada mes empieza en su propia fila**:
+ * el día 1 cae en su columna de la semana y las celdas de los otros meses se dejan vacías, de modo que el salto de
+ * mes se ve claramente (la última fila de un mes y la primera del siguiente no comparten línea).
+ */
 @Composable
 private fun ContinuousWeeks(
     skin: CalendarSkin, today: LocalDate, events: (LocalDate) -> CalendarEvent?,
     onDayClick: (LocalDate) -> Unit, onShown: (LocalDate) -> Unit,
 ) {
-    // Semana 0 = semana de ANCLA (2000-01-03 lunes o 2000-01-02 domingo).
-    val anchor = remember(skin.mondayFirst) { if (skin.mondayFirst) LocalDate(2000, 1, 3) else LocalDate(2000, 1, 2) }
-    val todayWeek = anchor.daysUntil(today) / 7
-    val listState = rememberLazyListState(initialFirstVisibleItemIndex = (todayWeek - 1).coerceAtLeast(0))
-    // Mes de cabecera: el del jueves/mitad de la primera semana visible (o la siguiente si está muy cortada).
-    val headerDate by remember(listState, anchor) {
+    // rowStarts[m] = índice de la primera fila del mes m; el último elemento es el total de filas.
+    val rowStarts = remember(skin.mondayFirst) {
+        IntArray(MESES_TOTALES + 1).also { a ->
+            for (m in 0 until MESES_TOTALES) a[m + 1] = a[m] + weeksOf(skin, monthStart(m))
+        }
+    }
+    fun monthOfRow(row: Int): Int {
+        var lo = 0
+        var hi = MESES_TOTALES - 1
+        while (lo < hi) {
+            val mid = (lo + hi + 1) / 2
+            if (rowStarts[mid] <= row) lo = mid else hi = mid - 1
+        }
+        return lo
+    }
+    val todayMonth = (today.year - 2000) * 12 + today.monthNumber - 1
+    val todayRow = rowStarts[todayMonth] + weekStart(skin, monthStart(todayMonth)).daysUntil(today) / 7
+    val listState = rememberLazyListState(initialFirstVisibleItemIndex = (todayRow - 1).coerceAtLeast(0))
+    // Mes de cabecera: el de la primera fila visible (o el de la siguiente si está muy cortada).
+    val headerDate by remember(listState, rowStarts) {
         derivedStateOf {
-            val idx = listState.firstVisibleItemIndex + if (listState.firstVisibleItemScrollOffset > 120) 1 else 0
-            anchor.plus(idx * 7 + 3, DateTimeUnit.DAY)
+            val row = listState.firstVisibleItemIndex + if (listState.firstVisibleItemScrollOffset > 120) 1 else 0
+            monthStart(monthOfRow(row.coerceAtMost(rowStarts[MESES_TOTALES] - 1)))
         }
     }
     LaunchedEffect(headerDate) { onShown(headerDate) }
     LazyColumn(Modifier.fillMaxSize().padding(horizontal = 4.dp), state = listState) {
-        items(SEMANAS, key = { it }) { w ->
-            val start = anchor.plus(w * 7, DateTimeUnit.DAY)
+        items(rowStarts[MESES_TOTALES], key = { it }) { r ->
+            val m = monthOfRow(r)
+            val first = monthStart(m)
+            val start = weekStart(skin, first).plus((r - rowStarts[m]) * 7, DateTimeUnit.DAY)
             Row(Modifier.fillMaxWidth().height(skin.rowHeight)) {
                 for (i in 0 until 7) {
                     val date = start.plus(i, DateTimeUnit.DAY)
-                    DayCell(skin, date, date == today, false, events(date), Modifier.weight(1f)) { onDayClick(date) }
+                    if (date.monthNumber == first.monthNumber) {
+                        DayCell(skin, date, date == today, false, events(date), Modifier.weight(1f)) { onDayClick(date) }
+                    } else {
+                        // Celda de otro mes: vacía, sin tarjeta ni línea, para que se aprecie el salto de mes.
+                        Spacer(Modifier.weight(1f))
+                    }
                 }
             }
         }
@@ -218,21 +253,21 @@ private fun DayCell(
             if (event != null) when (skin.eventStyle) {
                 EventStyle.BAND -> Box(
                     Modifier.padding(top = 3.dp, start = 1.dp, end = 1.dp).fillMaxWidth()
-                        .clip(RoundedCornerShape(skin.chipCorner)).background(skin.chipColor)
+                        .clip(RoundedCornerShape(skin.chipCorner)).background(event.color?.let { Color(it.argb) } ?: skin.chipColor)
                         .padding(horizontal = 3.dp, vertical = 1.dp),
                 ) {
-                    Text(event.title, color = skin.onChip, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Clip)
+                    Text(event.title, color = event.color?.let { if (it.textoOscuro) Color.Black else Color.White } ?: skin.onChip, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Clip)
                 }
                 EventStyle.TEXT -> Text(
                     event.title, Modifier.fillMaxWidth().padding(top = 3.dp, start = 2.dp, end = 1.dp),
-                    color = skin.chipColor.let { if (skin.background.luminance() < 0.5f) it.copy(alpha = 1f) else it },
+                    color = event.color?.let { Color(it.argb) } ?: skin.chipColor,
                     fontSize = 11.sp, lineHeight = 13.sp,
                     // Una palabra suelta no se parte en dos líneas: se recorta con puntos suspensivos.
                     maxLines = if (' ' in event.title.trim()) 2 else 1, overflow = TextOverflow.Ellipsis,
                 )
                 EventStyle.DOT -> Box(
                     Modifier.padding(top = 3.dp).size(5.dp).clip(CircleShape)
-                        .background(if (skin.chrome == Chrome.XIAOMI) skin.textColor else skin.accent.copy(alpha = 0.45f)),
+                        .background(event.color?.let { Color(it.argb) } ?: if (skin.chrome == Chrome.XIAOMI) skin.textColor else skin.accent.copy(alpha = 0.45f)),
                 )
             }
         }

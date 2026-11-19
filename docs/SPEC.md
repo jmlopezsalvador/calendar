@@ -32,15 +32,15 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
   `data/visuals/Kit_calendarios` (`Ficha.md`, `Matriz_navegacion.csv`). Se ignoran iconos/elementos de login de usuario en las capturas.
 - **R14. Cabeceras y menús fieles (no funcionales).** Cada marca replica sus botones de cabecera, selector de mes, barra de acciones, botón flotante «+», etc.
   (menú, búsqueda, «hoy», tareas, filtros…) dibujados con `Canvas`/`Path`, solo de atrezo. **Se omiten avatares/iconos de login de usuario.**
-- **R15. Desplazamiento configurable.** Ajuste: `Según la marca` (por defecto) / `Vertical continuo` (semanas contiguas) / `Horizontal` (paginado mes a mes).
+- **R15. Desplazamiento configurable.** Ajuste: `Según la marca` (por defecto) / `Vertical continuo` (semanas contiguas, pero **cada mes empieza en su propia fila**: el día 1 cae en su columna y las celdas de los meses vecinos se dejan vacías, como en los calendarios originales, para que el salto de mes se vea claro) / `Horizontal` (paginado mes a mes).
 - **R16. Versiones y ajuste fino.** Una marca puede tener **variantes** (p. ej. «Google Calendar en Samsung»: celdas sin redondeo) y Ajustes permite afinar
   detalles (redondeo, separación, altura de fila, elementos de cabecera visibles…) guardados como sobrescrituras de la skin.
 - **R5. Eventos.** Pulsar un día abre directamente el formulario (sin pantalla de resumen del día). Máximo **un evento por día**.
   Si el día ya tiene evento, el formulario se abre para modificarlo. El título del evento se ve como resumen dentro de la celda del día.
 - **R6. Formulario de evento (atrezo).** Título, texto/notas, y campos de relleno (todo el día, repetición, hora…) sin función real.
-  Se ampliará más adelante.
+  Cada evento puede llevar un **color** (azul, verde, rojo, amarillo o naranja; sin elegir = el color propio de la marca) que se ve en su celda. Se ampliará más adelante.
 - **R7. Eventos sintéticos.** Función para rellenar aleatoriamente un rango de fechas con eventos creíbles (gimnasio, dentista,
-  peluquería, cumpleaños, cita médica, quedada con amigos…). La lista de temas es editable en Ajustes. Si el día ya tiene evento, se abre el formulario con él.
+  peluquería, cumpleaños, cita médica, quedada con amigos…). La lista de temas es editable en Ajustes, y también el color de los eventos generados: aleatorio, el de la marca o uno fijo. Si el día ya tiene evento, se abre el formulario con él.
 - **R8. Forzado.** Al guardar el evento en el **día clave** (R9), la app inserta/sustituye en el **día de cumpleaños** deducido
   un evento «Feliz cumpleaños» cuyo texto incluye la carta (R10). Si el día ya tenía evento, se sustituye.
   Si luego el mago modifica el evento del día clave, el forzado se recalcula.

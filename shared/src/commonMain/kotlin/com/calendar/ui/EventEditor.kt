@@ -1,6 +1,9 @@
 package com.calendar.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -41,6 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.calendar.domain.CalendarEvent
+import com.calendar.domain.EventColor
 import kotlinx.datetime.LocalDate
 
 /** Familia de formulario: cada marca usa la disposición de su propia app. */
@@ -62,7 +66,7 @@ fun EventEditor(
     skin: CalendarSkin,
     date: LocalDate,
     existing: CalendarEvent?,
-    onSave: (title: String, notes: String, allDay: Boolean) -> Unit,
+    onSave: (title: String, notes: String, allDay: Boolean, color: EventColor?) -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -70,10 +74,11 @@ fun EventEditor(
     var notes by remember { mutableStateOf(existing?.notes ?: "") }
     // «Todo el día» tiene función oculta: en el día clave significa «3 meses» en vez de 2 (ver KeyDay).
     var allDay by remember { mutableStateOf(existing?.allDay ?: false) }
+    var color by remember { mutableStateOf(existing?.color) }
     val fecha = "${date.dayOfMonth} de ${nombreMes(date.monthNumber).lowercase()} de ${date.year}"
     val oscuro = skin.background.luminance() < 0.5f
     val canSave = title.isNotBlank()
-    val guardar = { onSave(title.trim(), notes.trim(), allDay) }
+    val guardar = { onSave(title.trim(), notes.trim(), allDay, color) }
     val estilo = skin.editorStyle()
     val fondo = if (estilo == EditorStyle.APPLE) (if (oscuro) Color.Black else Color(0xFFF2F2F7)) else skin.background
     val tarjeta = if (oscuro) Color(0xFF1C1C1E) else Color.White
@@ -83,7 +88,7 @@ fun EventEditor(
     Dialog(onDismissRequest = onDismiss, properties = DialogProperties(usePlatformDefaultWidth = false)) {
         Column(
             Modifier.fillMaxSize().background(fondo).windowInsetsPadding(WindowInsets.systemBars)
-                .windowInsetsPadding(WindowInsets.ime),
+                .windowInsetsPadding(WindowInsets.ime).dismissKeyboardOnTap(),
         ) {
             when (estilo) {
                 EditorStyle.GOOGLE -> {
@@ -104,6 +109,7 @@ fun EventEditor(
                         Fila("Zona horaria: hora estándar de Europa central", tenue)
                         Fila("No se repite", tenue)
                         Fila("Añadir notificación", tenue)
+                        FilaColor(color, { color = it }, texto)
                         Spacer(Modifier.height(4.dp))
                         Campo(notes, { notes = it }, "Añadir descripción", texto, tenue, 16.sp, singleLine = false, cursor = skin.accent)
                         if (existing != null) Eliminar("Eliminar", onDelete, tenue)
@@ -136,6 +142,8 @@ fun EventEditor(
                             FilaValor("Termina", fecha, texto, tenue)
                             Linea(tenue)
                             FilaValor("Repetir", "Nunca", texto, tenue)
+                            Linea(tenue)
+                            FilaColor(color, { color = it }, texto)
                         }
                         Column(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(tarjeta).padding(horizontal = 16.dp, vertical = 4.dp)) {
                             Campo(notes, { notes = it }, "Notas", texto, tenue, 17.sp, singleLine = false, cursor = Color(0xFF007AFF))
@@ -170,6 +178,7 @@ fun EventEditor(
                         Fila("Repetir: nunca", tenue)
                         Fila("Añadir ubicación", tenue)
                         Fila("Añadir notificación", tenue)
+                        FilaColor(color, { color = it }, texto)
                         Linea(tenue)
                         Campo(notes, { notes = it }, "Descripción", texto, tenue, 16.sp, singleLine = false, cursor = texto)
                         if (existing != null) Eliminar("Eliminar", onDelete, Color(0xFFD93025))
@@ -217,6 +226,23 @@ private fun FilaSwitch(texto: String, valor: Boolean, onChange: (Boolean) -> Uni
             valor, onChange,
             colors = SwitchDefaults.colors(checkedTrackColor = activo, checkedThumbColor = Color.White),
         )
+    }
+}
+
+/** Fila «Color»: círculos para elegir el color del evento (tocar el elegido lo quita y vuelve al color de la marca). */
+@Composable
+private fun FilaColor(valor: EventColor?, onChange: (EventColor?) -> Unit, texto: Color) {
+    Row(Modifier.fillMaxWidth().padding(vertical = 10.dp), verticalAlignment = Alignment.CenterVertically) {
+        Text("Color", color = texto, fontSize = 16.sp, modifier = Modifier.weight(1f))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            for (c in EventColor.entries) {
+                Box(
+                    Modifier.size(28.dp).clip(CircleShape).background(Color(c.argb))
+                        .then(if (valor == c) Modifier.border(3.dp, texto, CircleShape) else Modifier)
+                        .clickable { onChange(if (valor == c) null else c) },
+                )
+            }
+        }
     }
 }
 

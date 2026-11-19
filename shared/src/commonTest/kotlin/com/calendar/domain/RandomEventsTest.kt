@@ -59,4 +59,26 @@ class RandomEventsTest {
         assertEquals(0, RandomEvents.fill(repo, hasta, desde, listOf("X"), 100))
         assertNull(repo.get(desde))
     }
+
+    @Test
+    fun coloresFijoAleatorioYDeLaMarca() {
+        val fijo = EventRepository(Mem())
+        RandomEvents.fill(fijo, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool("verde"))
+        assertTrue(fijo.all().all { it.color == EventColor.VERDE })
+
+        val marca = EventRepository(Mem())
+        RandomEvents.fill(marca, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_DEFAULT))
+        assertTrue(marca.all().all { it.color == null })
+
+        val azar = EventRepository(Mem())
+        RandomEvents.fill(azar, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_RANDOM))
+        assertTrue(azar.all().map { it.color }.toSet().size > 1)
+    }
+
+    @Test
+    fun elColorDelEventoSePersiste() {
+        val store = Mem()
+        EventRepository(store).put(CalendarEvent(desde, "a", color = EventColor.NARANJA))
+        assertEquals(EventColor.NARANJA, EventRepository(store).get(desde)?.color)
+    }
 }

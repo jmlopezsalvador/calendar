@@ -27,6 +27,8 @@ data class AppSettings(
     val appIcon: String = "google",
     /** Mostrar la guía de inicio al arrancar la app. */
     val showGuide: Boolean = true,
+    /** Color de los eventos generados: `random`, `default` (el de la marca) o el id de un color. */
+    val genColor: String = "random",
 ) {
     companion object {
         const val AUTO = "auto"
@@ -56,6 +58,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
         appName = prefs.getString("app_name") ?: "calendar",
         appIcon = prefs.getString("app_icon") ?: "google",
         showGuide = prefs.getBoolean("guide_show", true),
+        genColor = prefs.getString("gen_color") ?: "random",
     )
 
     fun save(s: AppSettings) {
@@ -66,5 +69,6 @@ class SettingsStore(private val prefs: KeyValueStore) {
         prefs.putString("app_name", s.appName)
         prefs.putString("app_icon", s.appIcon)
         prefs.putBoolean("guide_show", s.showGuide)
+        prefs.putString("gen_color", s.genColor)
     }
 }

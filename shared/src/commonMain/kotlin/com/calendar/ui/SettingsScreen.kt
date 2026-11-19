@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.calendar.domain.AppIdentity
+import com.calendar.domain.EventColor
 import com.calendar.domain.RandomEvents
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
@@ -61,7 +62,7 @@ fun SettingsScreen(
     // Cambio pendiente de confirmar: (nombre, icono) propuestos.
     var pendiente by remember { mutableStateOf<Pair<String, String>?>(null) }
     val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
-    Column(Modifier.fillMaxSize().background(Color.White).windowInsetsPadding(WindowInsets.systemBars)) {
+    Column(Modifier.fillMaxSize().background(Color.White).windowInsetsPadding(WindowInsets.systemBars).dismissKeyboardOnTap()) {
         Row(Modifier.fillMaxWidth().padding(horizontal = 8.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             TextButton(onClick = onClose) { Text("‹ Volver", fontSize = 16.sp) }
             Text("Ajustes", fontSize = 20.sp, color = Color.Black, modifier = Modifier.padding(start = 8.dp))
@@ -118,6 +119,12 @@ fun SettingsScreen(
                 Deslizador("Meses hacia atrás desde hoy", atras, 0..12) { atras = it }
                 Deslizador("Meses hacia adelante desde hoy", adelante, 0..24) { adelante = it }
                 Deslizador("Días con evento (%)", porcentaje, 5..100) { porcentaje = it }
+                Titulo("Color de los eventos")
+                Opcion("Aleatorio (todos los colores)", settings.genColor == EventColor.MODE_RANDOM) { onChange(settings.copy(genColor = EventColor.MODE_RANDOM)) }
+                Opcion("El de la marca del calendario", settings.genColor == EventColor.MODE_DEFAULT) { onChange(settings.copy(genColor = EventColor.MODE_DEFAULT)) }
+                for (c in EventColor.entries) {
+                    Opcion("Siempre ${c.nombre.lowercase()}", settings.genColor == c.id) { onChange(settings.copy(genColor = c.id)) }
+                }
                 TextButton(onClick = {
                     val n = onGenerate(atras, adelante, porcentaje)
                     resultado = "Creados $n eventos (los días ocupados no se tocan)."

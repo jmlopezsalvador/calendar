@@ -6,6 +6,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import com.calendar.domain.EventColor
 import com.calendar.domain.EventRepository
 import com.calendar.ui.guide.GuideDialog
 import com.calendar.ui.guide.InstructionsScreen
@@ -52,6 +53,7 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                     val topics = RandomEvents.parseTopics(settings.topics ?: "").ifEmpty { RandomEvents.DEFAULT_TOPICS }
                     val n = RandomEvents.fill(
                         repo, today.minus(atras, DateTimeUnit.MONTH), today.plus(adelante, DateTimeUnit.MONTH), topics, pct,
+                        colors = EventColor.pool(settings.genColor),
                     )
                     version++
                     n
@@ -75,7 +77,7 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
         editing?.let { d ->
             EventEditor(
                 skin, d, repo.get(d),
-                onSave = { t, n, todoElDia -> engine.save(d, t, n, todoElDia); version++; editing = null },
+                onSave = { t, n, todoElDia, color -> engine.save(d, t, n, todoElDia, color); version++; editing = null },
                 onDelete = { engine.delete(d); version++; editing = null },
                 onDismiss = { editing = null },
             )

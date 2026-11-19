@@ -30,6 +30,8 @@ object RandomEvents {
         topics: List<String>,
         percent: Int,
         random: Random = Random.Default,
+        /** Colores entre los que se elige al azar para cada evento (null = color de la marca). */
+        colors: List<EventColor?> = listOf(null),
     ): Int {
         if (topics.isEmpty() || to < from) return 0
         var created = 0
@@ -37,7 +39,8 @@ object RandomEvents {
             val d = from.plus(i, DateTimeUnit.DAY)
             if (repo.get(d) != null) continue
             if (random.nextInt(100) >= percent) continue
-            repo.put(CalendarEvent(d, topics[random.nextInt(topics.size)]))
+            val titulo = topics[random.nextInt(topics.size)]
+            repo.put(CalendarEvent(d, titulo, color = colors.ifEmpty { listOf(null) }.let { it[random.nextInt(it.size)] }))
             created++
         }
         return created

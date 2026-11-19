@@ -14,6 +14,8 @@ data class CalendarEvent(
     val forcedFrom: LocalDate? = null,
     /** Marca «Todo el día» del formulario: en el día clave significa «3 meses» en vez de 2 (ver [KeyDay]). */
     val allDay: Boolean = false,
+    /** Color elegido para el evento (null = el color propio de la marca del calendario). */
+    val color: EventColor? = null,
 ) {
     val isForced: Boolean get() = forcedFrom != null
 }
@@ -61,16 +63,17 @@ class EventRepository(private val prefs: KeyValueStore) {
         }
 
         fun encode(e: CalendarEvent) =
-            listOf(e.date.toString(), e.forcedFrom?.toString() ?: "", esc(e.title), esc(e.notes), if (e.allDay) "1" else "0").joinToString("\t")
+            listOf(e.date.toString(), e.forcedFrom?.toString() ?: "", esc(e.title), esc(e.notes), if (e.allDay) "1" else "0", e.color?.id ?: "").joinToString("\t")
 
         fun decode(line: String): CalendarEvent? {
             val p = line.split('\t')
-            if (p.size != 4 && p.size != 5) return null // 4 = formato anterior, sin «todo el día»
+            if (p.size !in 4..6) return null // 4 y 5 = formatos anteriores (sin «todo el día» / sin color)
             return try {
                 CalendarEvent(
                     LocalDate.parse(p[0]), unesc(p[2]), unesc(p[3]),
                     p[1].takeIf { it.isNotEmpty() }?.let { LocalDate.parse(it) },
                     allDay = p.getOrNull(4) == "1",
+                    color = EventColor.fromId(p.getOrNull(5)),
                 )
             } catch (_: IllegalArgumentException) { null }
         }
@@ -84,14 +87,14 @@ class EventRepository(private val prefs: KeyValueStore) {
 class MagicEngine(private val repo: EventRepository) {
 
     /** Guarda el evento que escribe el usuario/mago en [date] y aplica el forzado. */
-    fun save(date: LocalDate, title: String, notes: String, allDay: Boolean = false) {
+    fun save(date: LocalDate, title: String, notes: String, allDay: Boolean = false, color: EventColor? = null) {
         val previous = repo.get(date)
         // Editar el evento forzado lo deja como está de forzado y no dispara nada nuevo.
         if (previous?.isForced == true) {
-            repo.put(previous.copy(title = title, notes = notes))
+            repo.put(previous.copy(title = title, notes = notes, color = color))
             return
         }
-        repo.put(CalendarEvent(date, title, notes, allDay = allDay))
+        repo.put(CalendarEvent(date, title, notes, allDay = allDay, color = color))
         // Se limpia el forzado anterior de este día clave y se vuelve a calcular.
         removeForcedBy(date)
         val card = cardOf(title, notes) ?: return

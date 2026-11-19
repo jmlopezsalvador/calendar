@@ -31,7 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
@@ -74,7 +76,10 @@ fun CalendarScreen(
     var shown by remember { mutableStateOf(today) }
     Box(Modifier.fillMaxSize().background(skin.background).windowInsetsPadding(WindowInsets.systemBars)) {
         Column(Modifier.fillMaxSize()) {
-            CalendarHeader(skin, shown, today, onTitleLongPress)
+            // Pulsación larga en CUALQUIER punto de la cabecera abre los Ajustes (los botones son solo atrezo).
+            Box(Modifier.fillMaxWidth().pointerInput(Unit) { detectTapGestures(onLongPress = { onTitleLongPress() }) }) {
+                CalendarHeader(skin, shown, today, onTitleLongPress)
+            }
             Row(Modifier.fillMaxWidth().padding(horizontal = skin.cellGap + 4.dp)) {
                 for (d in skin.weekdayLabels()) {
                     Text(

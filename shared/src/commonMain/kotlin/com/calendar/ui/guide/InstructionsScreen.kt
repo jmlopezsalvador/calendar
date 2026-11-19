@@ -47,7 +47,7 @@ fun InstructionsScreen(onClose: () -> Unit) {
 
             Seccion("Cómo se hace, paso a paso")
             Paso("1", "Pide el cumpleaños", "Que te diga solo el día y el mes, por ejemplo «13 de enero». Anota en qué año quieres que aparezca (el próximo, por ejemplo).")
-            Paso("2", "Calcula el día clave", "Retrocede 2 meses desde el cumpleaños (13 de enero → 13 de noviembre) y sube una fila: la celda de encima, 7 días antes (6 de noviembre). Es siempre la misma cuenta: cumpleaños − 2 meses − 7 días.")
+            Paso("2", "Calcula el día clave", "Retrocede 2 meses desde el cumpleaños (13 de enero → 13 de noviembre) y sube una fila: la celda de encima, 7 días antes (6 de noviembre). Es siempre la misma cuenta: cumpleaños − 2 meses − 7 días. Si ese día no existe, mira «Días especiales».")
             Arte { ArtDiaClave() }
             Paso("3", "Pulsa el día clave", "Al tocar un día se abre directamente el formulario del evento. Si el día ya tenía un evento, se abre para editarlo.")
             Paso("4", "Escribe el texto con la carta", "Escribe lo que quieras en el título o en la descripción, pero que termine en dos letras: valor y palo de la carta (por ejemplo «Cena con Marta 8C»). La app busca la carta primero en la descripción y, si no hay, en el título.")
@@ -67,8 +67,10 @@ fun InstructionsScreen(onClose: () -> Unit) {
             P("Ejemplos: 8C = 8 de corazones · 7P = 7 de picas · QT = Reina de tréboles · 0T = 10 de tréboles · 1C = As de corazones.")
 
             Seccion("Días especiales")
-            P("Hay cumpleaños que no existen dos meses antes (29 y 30 de abril, 31 de agosto, 31 de enero, 29 de febrero): no tienen día clave. En esos casos usa el Forzado manual de los Ajustes: escribe la fecha del cumpleaños (dd/mm/aaaa) y la carta, y pulsa «Forzar».")
-            P("Los cumpleaños del 28 de febrero, 30 de junio y 30 de noviembre sí funcionan con normalidad: tienen día clave como cualquier otro.")
+            P("Hay cumpleaños cuya fecha no existe dos meses antes: el 30 de abril (30 de febrero no existe), el 29 de abril en años no bisiestos, el 31 de agosto (31 de junio) y el 31 de enero (31 de noviembre). Para ellos usa el interruptor «Todo el día» del formulario, que significa «tres meses» en lugar de dos.")
+            Paso("A", "Retrocede un mes más", "Si dos meses antes el día no existe, ve un mes más atrás (por ejemplo, cumpleaños 30 de abril → 30 de enero) y toma la celda de encima (23 de enero).")
+            Paso("B", "Activa «Todo el día»", "Pulsa ese día, activa «Todo el día», escribe el texto con la carta y guarda. La app coloca el «Feliz cumpleaños» tres meses después (30 de abril).")
+            P("Con tres meses, los cumpleaños que fallan son otros (29, 30 y 31 de mayo, 31 de julio y 31 de diciembre), y esos sí existen dos meses antes. Entre las dos opciones se cubre cualquier fecha. Los demás cumpleaños (incluido el 29 de febrero) usan el método normal, con «Todo el día» desactivado, que es como se abre el formulario por defecto.")
 
             Seccion("Gestos ocultos")
             P("La app no muestra ningún botón de ajustes, para que nadie sospeche. Todo se hace con pulsación larga, y cada gesto vibra dos veces:")
@@ -83,7 +85,6 @@ fun InstructionsScreen(onClose: () -> Unit) {
             Item("Ajuste fino", "Redondeo y separación de las celdas y altura de las filas, para clavar detalles de la versión de calendario que imites. Al cambiar de marca se restablece.")
             Item("Nombre e icono de la app", "En Android puedes elegir entre Calendar, Calendario y Agenda, y entre diez iconos de calendarios reales. Al elegir uno sale un aviso: la app se reiniciará para aplicarlo (Cancelar o Aplicar). En iPhone solo se puede cambiar el icono; el nombre no.")
             Item("Eventos aleatorios", "Rellena el calendario con eventos creíbles (gimnasio, dentista, peluquería…) para que parezca usado. Edita la lista de temas (uno por línea), elige cuántos meses hacia atrás y adelante y el porcentaje de días con evento. No toca los días que ya tienen evento.")
-            Item("Forzado manual", "Para los cumpleaños sin día clave: fija a mano la fecha y la carta.")
 
             Seccion("Consejos")
             P("• Prepara el calendario antes: elige la marca, rellena con eventos aleatorios y, si quieres, cambia el nombre y el icono.\n• Solo hay un evento por día: guardar sobre un día ocupado lo sustituye.\n• Para repetir el efecto, reinícialo con la pulsación larga en la esquina antes de empezar de nuevo.\n• La carta del evento de prueba es la que revelará la app: asegúrate de que coincide con la que quieres mostrar.")

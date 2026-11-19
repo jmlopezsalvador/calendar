@@ -61,16 +61,33 @@ class KeyDayTest {
         assertEquals(d(2027, 4, 28), KeyDay.birthdayFrom(KeyDay.keyDayFor(d(2027, 4, 30))))
     }
 
-    @Test fun losUnicosFallosDeIdaYVueltaSonLosPrevistos() {
+    @Test fun conTresMesesSeRecuperanLosCasosDeDosMeses() {
+        // 29/30-abr, 31-ago y 31-ene no tienen día clave con 2 meses, pero sí con 3 (todo el día activado).
+        for (b in listOf(d(2027, 4, 30), d(2027, 8, 31), d(2027, 1, 31), d(2027, 4, 29))) {
+            assertEquals(false, KeyDay.roundTrips(b, 2), "2 meses $b")
+            assertEquals(true, KeyDay.roundTrips(b, 3), "3 meses $b")
+        }
+        // Ejemplo: 30-abr → 30-ene → día clave 23-ene (3 meses).
+        assertEquals(d(2027, 1, 23), KeyDay.keyDayFor(d(2027, 4, 30), 3))
+        assertEquals(d(2027, 4, 30), KeyDay.birthdayFrom(d(2027, 1, 23), 3))
+    }
+
+    @Test fun losFallosDeCadaVarianteSonLosPrevistosYNoSeSolapan() {
         var d0 = d(2026, 1, 1)
-        val fin = d(2030, 12, 31)
+        val fin = d(2032, 12, 31)
         while (d0 <= fin) {
-            if (!KeyDay.roundTrips(d0)) {
-                val m = d0.monthNumber
-                val dia = d0.dayOfMonth
-                val previsto = (m == 4 && dia >= 29) || (m == 8 && dia == 31) || (m == 1 && dia == 31) || (m == 2 && dia == 29)
-                assertEquals(true, previsto, "Fallo inesperado en $d0")
+            val m = d0.monthNumber
+            val dia = d0.dayOfMonth
+            if (!KeyDay.roundTrips(d0, 2)) {
+                val previsto = (m == 4 && dia >= 29) || (m == 8 && dia == 31) || (m == 1 && dia == 31)
+                assertEquals(true, previsto, "Fallo inesperado con 2 meses en $d0")
             }
+            if (!KeyDay.roundTrips(d0, 3)) {
+                val previsto = (m == 5 && dia >= 29) || (m == 7 && dia == 31) || (m == 12 && dia == 31)
+                assertEquals(true, previsto, "Fallo inesperado con 3 meses en $d0")
+            }
+            // Entre las dos variantes se cubre cualquier cumpleaños.
+            assertEquals(true, KeyDay.isReachable(d0), "Cumpleaños inalcanzable: $d0")
             d0 = d0.plus(1, DateTimeUnit.DAY)
         }
     }

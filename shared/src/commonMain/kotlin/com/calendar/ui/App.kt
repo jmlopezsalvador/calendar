@@ -10,7 +10,6 @@ import com.calendar.domain.EventRepository
 import com.calendar.ui.guide.GuideDialog
 import com.calendar.ui.guide.InstructionsScreen
 import com.calendar.domain.MagicEngine
-import com.calendar.domain.ManualForce
 import com.calendar.domain.RandomEvents
 import kotlinx.datetime.Clock
 import kotlinx.datetime.DateTimeUnit
@@ -64,7 +63,6 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                     platform.applyIdentity(n, i)
                 },
                 onShowGuide = { showGuide = true }, onShowInstructions = { showInstructions = true },
-                onForce = { f, c -> ManualForce.apply(engine, f, c).also { if (it) version++ } },
                 onClose = { showSettings = false },
             )
             return@pantallas
@@ -77,7 +75,7 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
         editing?.let { d ->
             EventEditor(
                 skin, d, repo.get(d),
-                onSave = { t, n -> engine.save(d, t, n); version++; editing = null },
+                onSave = { t, n, todoElDia -> engine.save(d, t, n, todoElDia); version++; editing = null },
                 onDelete = { engine.delete(d); version++; editing = null },
                 onDismiss = { editing = null },
             )

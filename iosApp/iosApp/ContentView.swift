@@ -3,7 +3,9 @@ import Shared
 
 struct ComposeView: UIViewControllerRepresentable {
     func makeUIViewController(context: Context) -> UIViewController {
-        MainViewControllerKt.MainViewController()
+        MainViewControllerKt.MainViewController(setIcon: { name in
+            UIApplication.shared.setAlternateIconName(name, completionHandler: nil)
+        })
     }
     func updateUIViewController(_ vc: UIViewController, context: Context) {}
 }

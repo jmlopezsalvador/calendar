@@ -87,7 +87,8 @@ fun MiniMonth(
     val first = LocalDate(year, month, 1)
     val offset = first.dayOfWeek.ordinal // lunes = 0
     val days = first.daysUntil(first.plus(1, DateTimeUnit.MONTH))
-    val weeks = (offset + days + 6) / 7
+    // Siempre 6 filas: así el mes no cambia de alto entre animaciones y el texto de debajo no se mueve.
+    val weeks = 6
     Column(modifier.background(skin.background, RoundedCornerShape(12.dp)).padding(6.dp)) {
         Row {
             for (l in listOf("L", "M", "X", "J", "V", "S", "D")) {
@@ -110,10 +111,10 @@ fun MiniMonth(
                             ) {
                                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                     Text(
-                                        d.toString(), fontSize = 12.sp, fontWeight = FontWeight.Medium,
+                                        d.toString(), fontSize = 12.sp, lineHeight = 13.sp, fontWeight = FontWeight.Medium,
                                         color = if (m != null) Color.White else skin.textColor,
                                     )
-                                    if (m?.text != null) Text(m.text, fontSize = 8.sp, color = Color.White, maxLines = 1)
+                                    if (m?.text != null) Text(m.text, fontSize = 8.sp, lineHeight = 9.sp, color = Color.White, maxLines = 1)
                                 }
                             }
                             if (d == pulseDay) {
@@ -132,7 +133,10 @@ fun MiniMonth(
 
 @Composable
 private fun Pie(texto: String) {
-    Text(texto, fontSize = 13.sp, color = Gris, textAlign = TextAlign.Center, modifier = Modifier.fillMaxWidth().padding(top = 8.dp))
+    // Altura fija (2 líneas) aunque el texto cambie.
+    Box(Modifier.fillMaxWidth().height(56.dp).padding(top = 8.dp), contentAlignment = Alignment.TopCenter) {
+        Text(texto, fontSize = 13.sp, color = Gris, textAlign = TextAlign.Center)
+    }
 }
 
 /** Portada: el mismo mes con el aspecto de varias marcas, una tras otra. */

@@ -69,13 +69,16 @@ Definiciones: rejilla de semanas, cada celda es un día; «misma vertical» = mi
 | 29 y 30 abril | febrero no tiene 29 (año no bisiesto) / 30 |
 | 31 agosto | junio no tiene 31 |
 | 31 enero | noviembre no tiene 31 |
-| 29 febrero | solo en bisiesto |
 
-**Propuesta (v1):** para el mago, si el día no existe, usar el **último día de ese mes** (28/29-feb, 30-jun, 30-nov) y mirar la celda de encima.
-En la app, al invertir, si `X + 7` cae en el último día de febrero, junio o noviembre, se interpreta como el **cumpleaños canónico más bajo**
-que ese día admite (p. ej. 28-feb → 28-abr; 30-jun → 30-ago; 30-nov → 30-ene), y para los casos que quedan sin código se ofrece un **forzado manual**:
-en Ajustes (oculto) o con pulsación larga se puede fijar a mano la fecha de forzado. Los casos 29/30-abr, 31-ago y 31-ene (y 29-feb) son raros
-y se resuelven con ese override. *Pendiente de validar; se itera si no convence.*
+*Nota:* el 29 de febrero **sí** tiene día clave (29-feb − 2 meses = 29-dic, y la celda de encima es el 22-dic); solo falta en los años no bisiestos porque esa fecha no existe.
+
+**Solución: la marca «Todo el día» (variante de 3 meses).** El formulario de evento lleva el interruptor «Todo el día» (por defecto
+desactivado). Activado en el evento del día clave significa «3 meses» en vez de 2: `B = (X + 7 días) + 3 meses`. El mago, cuando el
+día `B − 2 meses` no existe en el calendario, retrocede un mes más (`B − 3 meses`), toma la celda de encima y activa «Todo el día».
+Los cumpleaños sin día clave con 2 meses (29/30-abr, 31-ago, 31-ene) existen 3 meses antes, y los que no existen 3 meses antes
+(29/30/31-may —el 29 solo en año no bisiesto—, 31-jul, 31-dic) existen 2 meses antes: **no se solapan, así que entre las dos variantes
+se cubre cualquier cumpleaños** (lo comprueba un test para 2026–2032). Ejemplo: `B = 30-abr-2027` → `30-ene-2027` → día clave `23-ene-2027` con «Todo el día».
+Al guardar de nuevo el día clave con otro valor del interruptor, el forzado anterior se retira y se coloca el nuevo.
 
 Los tests unitarios de este algoritmo van en `commonTest` (bisiestos, fin de año, meses de 28/29/30/31 días, ida y vuelta).
 

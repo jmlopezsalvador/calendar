@@ -116,4 +116,36 @@ class EventsTest {
         engine.reset()
         assertTrue(repo.all().isEmpty())
     }
+
+    @Test
+    fun todoElDiaUsaTresMeses() {
+        val repo = EventRepository(MemoryStore())
+        val engine = MagicEngine(repo)
+        // Cumpleaños 30-abr-2027 → con 3 meses: día clave 23-ene-2027.
+        engine.save(LocalDate(2027, 1, 23), "prueba 8C", "", allDay = true)
+        assertEquals("Feliz cumpleaños", repo.get(LocalDate(2027, 4, 30))?.title)
+        assertNull(repo.get(LocalDate(2027, 3, 30))) // no se fuerza con 2 meses
+        assertEquals(true, repo.get(LocalDate(2027, 1, 23))?.allDay)
+    }
+
+    @Test
+    fun cambiarDeDosATresMesesMueveElForzado() {
+        val repo = EventRepository(MemoryStore())
+        val engine = MagicEngine(repo)
+        val clave = LocalDate(2026, 11, 6)
+        engine.save(clave, "x 8C", "")
+        assertEquals("Feliz cumpleaños", repo.get(LocalDate(2027, 1, 13))?.title)
+        engine.save(clave, "x 8C", "", allDay = true)
+        assertNull(repo.get(LocalDate(2027, 1, 13)))
+        assertEquals("Feliz cumpleaños", repo.get(LocalDate(2027, 2, 13))?.title)
+        engine.delete(clave)
+        assertNull(repo.get(LocalDate(2027, 2, 13)))
+    }
+
+    @Test
+    fun elTodoElDiaSePersiste() {
+        val store = MemoryStore()
+        EventRepository(store).put(CalendarEvent(LocalDate(2026, 11, 6), "a", "b", allDay = true))
+        assertEquals(true, EventRepository(store).get(LocalDate(2026, 11, 6))?.allDay)
+    }
 }

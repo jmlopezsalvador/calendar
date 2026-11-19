@@ -62,17 +62,18 @@ fun EventEditor(
     skin: CalendarSkin,
     date: LocalDate,
     existing: CalendarEvent?,
-    onSave: (title: String, notes: String) -> Unit,
+    onSave: (title: String, notes: String, allDay: Boolean) -> Unit,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     var title by remember { mutableStateOf(existing?.title ?: "") }
     var notes by remember { mutableStateOf(existing?.notes ?: "") }
-    var allDay by remember { mutableStateOf(true) }
+    // «Todo el día» tiene función oculta: en el día clave significa «3 meses» en vez de 2 (ver KeyDay).
+    var allDay by remember { mutableStateOf(existing?.allDay ?: false) }
     val fecha = "${date.dayOfMonth} de ${nombreMes(date.monthNumber).lowercase()} de ${date.year}"
     val oscuro = skin.background.luminance() < 0.5f
     val canSave = title.isNotBlank()
-    val guardar = { onSave(title.trim(), notes.trim()) }
+    val guardar = { onSave(title.trim(), notes.trim(), allDay) }
     val estilo = skin.editorStyle()
     val fondo = if (estilo == EditorStyle.APPLE) (if (oscuro) Color.Black else Color(0xFFF2F2F7)) else skin.background
     val tarjeta = if (oscuro) Color(0xFF1C1C1E) else Color.White

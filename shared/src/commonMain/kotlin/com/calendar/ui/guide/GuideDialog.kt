@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,6 +19,7 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.Text
@@ -58,7 +60,7 @@ private val FASES = listOf(
     Fase(
         "El día clave",
         "Se calcula con el cumpleaños: retrocede 2 meses y sube a la celda de encima. La app hace la cuenta " +
-            "al revés y coloca el mensaje en el cumpleaños exacto. Ejemplo: cumpleaños 13 de enero → día clave 6 de noviembre.",
+            "al revés y coloca el mensaje en el cumpleaños exacto. Ejemplo: cumpleaños 13 de enero → día clave 6 de noviembre. Si ese día no existe, retrocede 3 meses y activa «Todo el día».",
     ) { ArtDiaClave() },
     Fase(
         "La carta",
@@ -89,9 +91,14 @@ fun GuideDialog(noMostrarInicial: Boolean, onFinish: (noMostrar: Boolean) -> Uni
     val ultima = pager.currentPage == FASES.size - 1
     // Capa a pantalla completa por encima de la app (no es un Dialog del sistema, así respeta los márgenes de las barras).
     run {
-        Column(
-            Modifier.fillMaxSize().background(Color.White).pointerInput(Unit) { detectTapGestures { } }
+        Box(
+            Modifier.fillMaxSize().background(Color.Black.copy(alpha = 0.55f)).pointerInput(Unit) { detectTapGestures { } }
                 .windowInsetsPadding(WindowInsets.systemBars),
+            contentAlignment = Alignment.Center,
+        ) {
+        Column(
+            Modifier.padding(horizontal = 20.dp, vertical = 24.dp).fillMaxWidth().fillMaxHeight(0.82f)
+                .clip(RoundedCornerShape(28.dp)).background(Color.White),
         ) {
             HorizontalPager(pager, Modifier.weight(1f)) { i ->
                 val f = FASES[i]
@@ -101,7 +108,7 @@ fun GuideDialog(noMostrarInicial: Boolean, onFinish: (noMostrar: Boolean) -> Uni
                 ) {
                     Text("${i + 1} / ${FASES.size}", fontSize = 13.sp, color = Color(0xFF79747E))
                     Text(
-                        f.titulo, fontSize = 26.sp, fontWeight = FontWeight.Bold, color = Color.Black,
+                        f.titulo, fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.Black,
                         textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp, bottom = 20.dp),
                     )
                     Box(Modifier.fillMaxWidth().padding(bottom = 20.dp), contentAlignment = Alignment.Center) { f.arte() }
@@ -135,6 +142,7 @@ fun GuideDialog(noMostrarInicial: Boolean, onFinish: (noMostrar: Boolean) -> Uni
                     if (ultima) onFinish(noMostrar) else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
                 }) { Text(if (ultima) "Empezar" else "Siguiente", fontWeight = FontWeight.Bold) }
             }
+        }
         }
     }
 }

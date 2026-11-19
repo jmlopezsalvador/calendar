@@ -12,6 +12,8 @@ data class CalendarEvent(
     val title: String,
     val notes: String = "",
     val forcedFrom: LocalDate? = null,
+    /** Marca «Todo el día» del formulario: en el día clave significa «3 meses» en vez de 2 (ver [KeyDay]). */
+    val allDay: Boolean = false,
 ) {
     val isForced: Boolean get() = forcedFrom != null
 }
@@ -59,15 +61,16 @@ class EventRepository(private val prefs: KeyValueStore) {
         }
 
         fun encode(e: CalendarEvent) =
-            listOf(e.date.toString(), e.forcedFrom?.toString() ?: "", esc(e.title), esc(e.notes)).joinToString("\t")
+            listOf(e.date.toString(), e.forcedFrom?.toString() ?: "", esc(e.title), esc(e.notes), if (e.allDay) "1" else "0").joinToString("\t")
 
         fun decode(line: String): CalendarEvent? {
             val p = line.split('\t')
-            if (p.size != 4) return null
+            if (p.size != 4 && p.size != 5) return null // 4 = formato anterior, sin «todo el día»
             return try {
                 CalendarEvent(
                     LocalDate.parse(p[0]), unesc(p[2]), unesc(p[3]),
                     p[1].takeIf { it.isNotEmpty() }?.let { LocalDate.parse(it) },
+                    allDay = p.getOrNull(4) == "1",
                 )
             } catch (_: IllegalArgumentException) { null }
         }
@@ -81,18 +84,19 @@ class EventRepository(private val prefs: KeyValueStore) {
 class MagicEngine(private val repo: EventRepository) {
 
     /** Guarda el evento que escribe el usuario/mago en [date] y aplica el forzado. */
-    fun save(date: LocalDate, title: String, notes: String) {
+    fun save(date: LocalDate, title: String, notes: String, allDay: Boolean = false) {
         val previous = repo.get(date)
         // Editar el evento forzado lo deja como está de forzado y no dispara nada nuevo.
         if (previous?.isForced == true) {
             repo.put(previous.copy(title = title, notes = notes))
             return
         }
-        repo.put(CalendarEvent(date, title, notes))
+        repo.put(CalendarEvent(date, title, notes, allDay = allDay))
         // Se limpia el forzado anterior de este día clave y se vuelve a calcular.
         removeForcedBy(date)
         val card = cardOf(title, notes) ?: return
-        forceAt(KeyDay.birthdayFrom(date), card, source = date)
+        // «Todo el día» activado = 3 meses; desactivado = 2 meses.
+        forceAt(KeyDay.birthdayFrom(date, KeyDay.monthsFor(allDay)), card, source = date)
     }
 
     /** Borra el evento de [date]; si era un día clave, también retira su forzado. */
@@ -114,7 +118,7 @@ class MagicEngine(private val repo: EventRepository) {
         }
     }
 
-    /** Forzado manual (casos sin código, SPEC §4): cumpleaños y carta fijados a mano. */
+    /** Coloca el «Feliz cumpleaños» con su carta en [birthday]; [source] es el día clave que lo originó. */
     fun forceAt(birthday: LocalDate, card: Card, source: LocalDate = birthday) {
         repo.put(forcedEvent(birthday, card, source))
     }
@@ -122,10 +126,9 @@ class MagicEngine(private val repo: EventRepository) {
     /** La carta se busca primero en las notas (el «texto» del evento) y, si no hay, en el título. */
     fun cardOf(title: String, notes: String): Card? = Card.fromText(notes) ?: Card.fromText(title)
 
+    /** Quita el forzado originado por [source], sea con 2 o con 3 meses. */
     private fun removeForcedBy(source: LocalDate) {
-        val b = KeyDay.birthdayFrom(source)
-        val e = repo.get(b)
-        if (e?.forcedFrom == source) repo.remove(b)
+        for (e in repo.all()) if (e.forcedFrom == source) repo.remove(e.date)
     }
 
     private fun forcedEvent(birthday: LocalDate, card: Card, source: LocalDate) = CalendarEvent(

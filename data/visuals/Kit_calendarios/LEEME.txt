@@ -1,0 +1,13 @@
+Catálogo de referencias de diseño de calendarios móviles, centrado en la vista mensual y en la navegación entre meses. Incluye nueve kits, sus iconos y una clasificación explícita de la evidencia de desplazamiento continuo. Investigación consultada el 19 de noviembre de 2026.
+
+Las dos referencias que mejor acreditan el patrón solicitado son Business Calendar 2 en Android y Monthly Calendar Moca en iPhone: sus desarrolladores describen expresamente la continuidad entre meses. Para el resto se separa lo visible en las imágenes de los gestos documentados y de lo que falta probar.
+
+Abrir index.html para navegar sin conexión. Cada carpeta contiene Kit.pdf, Ficha.md y las imágenes originales de referencia en PNG. Catalogo_completo.pdf reúne todo.
+
+Scroll mensual continuo significa poder recorrer semanas contiguas y cruzar un límite de mes en la misma superficie. No basta con que se vean días del mes vecino, que una agenda se desplace o que un gesto vertical salte al siguiente mes. El ajuste automático al principio del mes y el desplazamiento libre pueden coexistir, como documenta Business Calendar 2.
+
+Las imágenes proceden de documentación oficial, tiendas, guías y repositorios visuales. Se mantienen originales, con sus marcos, fechas, textos y anotaciones. No se han generado pantallas con IA. La versión de una ficha de tienda no identifica automáticamente la versión de una captura antigua. No se han ejecutado las apps en dispositivos físicos para este trabajo.
+
+Inventario_imagenes_y_fuentes.csv documenta cada recurso. Matriz_navegacion.csv permite reutilizar la comparación. Los iconos de tienda y los observados en pantalla se distinguen.
+
+Las capturas pertenecen a sus titulares. No se incluye licencia comercial de esos diseños.

@@ -1,0 +1,77 @@
+# SPEC — Calendar (herramienta de magia)
+
+Fuente de verdad funcional. Requisitos numerados; las preguntas abiertas están al final.
+
+## 1. Resumen
+App Android + iOS que **emula un calendario real** (look and feel de distintas marcas/sistemas) y esconde un efecto de magia:
+el espectador cree que el calendario guarda eventos, pero el mago fuerza un evento «Feliz cumpleaños» + la carta elegida
+en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
+
+## 2. El efecto (guion)
+1. Se pregunta al espectador su fecha de nacimiento y se le hace elegir una carta (baraja francesa).
+2. Se abre la app: calendario mensual. El mago dice que suele guardar eventos en el calendario.
+3. El mago pulsa un día concreto (el **día clave**, ver §4), se abre el formulario, escribe un evento de prueba y lo guarda.
+4. Se vuelve a preguntar el cumpleaños y se pide al espectador que navegue hasta ese día.
+5. En su día aparece el evento «Feliz cumpleaños» y, al abrirlo, un mensaje de feliz cumpleaños con **su carta**.
+
+## 3. Requisitos funcionales
+- **R1. Nombre y icono seleccionables.** En Ajustes se elige el nombre visible y el icono de la app entre un conjunto
+  incluido en el paquete. Nombres iniciales: `Calendar`, `Calendario`, `Agenda` (se ampliarán). Iconos: los de `data/visuals`
+  (`icono.png` de cada marca). Android: *activity-alias*; iOS: *alternate icons* (el nombre en iOS solo cambia dentro de la app, no el del icono de inicio).
+- **R2. Look and feel por marca.** Ajustes lista las marcas del kit y permite elegir una. Solo se replica la **pantalla del calendario**
+  (vista mensual); el formulario de evento es común en estructura pero **tomando colores, tipografía y tipo de componentes de la marca elegida**.
+  Marcas del kit: Samsung, Apple, Google, Xiaomi, OPPO (= Google), Huawei, Business Calendar 2, Monthly Calendar Moca, aCalendar.
+- **R3. Detección automática del sistema.** Opción «Automático» (por defecto): Android → plantilla Google (o Samsung/Xiaomi/Huawei/OPPO
+  según `Build.MANUFACTURER`); iOS → Apple. El usuario puede cambiarla.
+- **R4. Vista mensual continua.** Al abrir, calendario mensual con scroll continuo entre meses (semanas contiguas que cruzan el límite de mes).
+  La dirección (vertical/horizontal) y el comportamiento (ajuste al mes, etc.) dependen de la marca; se define a partir de
+  `data/visuals/Kit_calendarios` (`Ficha.md`, `Matriz_navegacion.csv`). Se ignoran iconos/elementos de login de usuario en las capturas.
+- **R5. Eventos.** Pulsar un día abre directamente el formulario (sin pantalla de resumen del día). Máximo **un evento por día**.
+  Si el día ya tiene evento, el formulario se abre para modificarlo. El título del evento se ve como resumen dentro de la celda del día.
+- **R6. Formulario de evento (atrezo).** Título, texto/notas, y campos de relleno (todo el día, repetición, hora…) sin función real.
+  Se ampliará más adelante.
+- **R7. Eventos sintéticos.** Función para rellenar aleatoriamente un rango de fechas con eventos creíbles (gimnasio, dentista,
+  peluquería, cumpleaños, cita médica, quedada con amigos…). La lista de temas es editable en Ajustes. Si el día ya tiene evento, se abre el formulario con él.
+- **R8. Forzado.** Al guardar el evento en el **día clave** (R9), la app inserta/sustituye en el **día de cumpleaños** deducido
+  un evento «Feliz cumpleaños» cuyo texto incluye la carta (R10). Si el día ya tenía evento, se sustituye.
+  Si luego el mago modifica el evento del día clave, el forzado se recalcula.
+- **R9. Día clave → cumpleaños (ver §4).**
+- **R10. Carta.** El evento de prueba lleva un texto cualquiera; **sus dos últimas letras** codifican la carta: valor + palo.
+  Valor: `A`/`1`=as, `2`–`9`, `0`/`T`=10 (`T` también por «ten»), `J`, `Q`, `K`. Palo: `C`=corazones, `P`=picas, `T`=tréboles, `D`=diamantes.
+  Ejemplos: `8C`=8♥, `7P`=7♠, `QT`=Q♣, `0T`=10♣, `1C`=A♥. Insensible a mayúsculas. Si las dos últimas letras no forman una carta válida,
+  no se fuerza nada (el evento es normal).
+- **R11. Mensaje final.** Al abrir el evento forzado se muestra «¡Feliz cumpleaños!» y el nombre de la carta en español
+  (p. ej. «8 de corazones»). El aspecto debe parecer un evento normal con ese texto.
+- **R12. Persistencia local** de eventos y ajustes (SharedPreferences / UserDefaults o fichero interno).
+- **R13. Plataformas:** Android + iOS, orientación vertical, idioma español.
+
+## 4. Algoritmo del día clave → cumpleaños
+Definiciones: rejilla de semanas, cada celda es un día; «misma vertical» = misma columna = ±7 días.
+
+**Dirección mago (cómo elige el día clave):** dado el cumpleaños `B`, se retrocede 2 meses → `B₋₂ₘ`, y el día clave es la celda
+**inmediatamente encima** (`B₋₂ₘ − 7 días`). Ejemplo: `B = 13-ene-2027` → `13-nov-2026` → día clave `6-nov-2026`.
+
+**Dirección app (lo que implementamos):** al guardarse un evento de prueba en el día `X`, la app deduce
+`B = (X + 7 días) + 2 meses`. Ejemplo: `X = 6-nov-2026` → `13-nov-2026` → `B = 13-ene-2027`. El forzado va en esa fecha (año incluido).
+
+**Días que no existen al retroceder 2 meses** (la dirección mago es many-to-one en estos casos):
+| Cumpleaños `B` | Problema |
+|---|---|
+| 29 y 30 abril | febrero no tiene 29 (año no bisiesto) / 30 |
+| 31 agosto | junio no tiene 31 |
+| 29 febrero | solo en bisiesto |
+
+**Propuesta (v1):** para el mago, si el día no existe, usar el **último día de ese mes** (28/29-feb, 30-jun) y mirar la celda de encima.
+En la app, al invertir, si `X + 7` cae en el último día de febrero o de junio, se interpreta como el **cumpleaños canónico más bajo**
+que ese día admite (p. ej. 28-feb → 28-abr; 30-jun → 30-ago), y para los casos que quedan sin código se ofrece un **forzado manual**:
+en Ajustes (oculto) o con pulsación larga se puede fijar a mano la fecha de forzado. Los casos 29/30-abr y 31-ago (y 29-feb) son raros
+y se resuelven con ese override. *Pendiente de validar; se itera si no convence.*
+
+Los tests unitarios de este algoritmo van en `commonTest` (bisiestos, fin de año, meses de 28/29/30/31 días, ida y vuelta).
+
+## 5. Preguntas abiertas
+- Elegir el día clave usando el domingo o el lunes como inicio de semana no afecta (siempre ±7 días), pero ¿se muestran semanas de lunes o domingo según la marca? (lo marca el kit).
+- Alcance del icono alternativo en iOS (requiere los PNG en el proyecto Xcode generado por XcodeGen).
+- Formato exacto del mensaje de feliz cumpleaños y del título del evento forzado.
+- Campos del formulario de evento más allá del título y las notas.
+- Qué hacer si el día clave cae en un día que ya tiene evento (propuesta: se sobrescribe igual que cualquier otro).

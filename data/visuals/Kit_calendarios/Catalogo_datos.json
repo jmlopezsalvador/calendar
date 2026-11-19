@@ -1,0 +1,772 @@
+[
+  {
+    "id": "samsung",
+    "folder": "01_samsung",
+    "name": "Samsung Calendar",
+    "system": "Samsung Galaxy",
+    "version": "One UI 6 y Android 14 en TechBone; apoyo visual de Samsung sin versión exacta.",
+    "icon": {
+      "group": "samsung_official",
+      "id": "oficial_01",
+      "url": "https://images.samsung.com/is/image/samsung/assets/seg---upload-updated-faq---calender-app/kalendar.png",
+      "page": "https://www.samsung.com/de/support/mobile-devices/kalender-app-verwenden/",
+      "alt": "Symbol der Kalender-App eines Galaxy Smartphones wird angezeigt.",
+      "file": "01_samsung/icono.png",
+      "width": 150,
+      "height": 150,
+      "title": "Icono de Samsung Calendar",
+      "caption": "Recurso de la página oficial. El número visible no se presenta como un logotipo fijo.",
+      "kind": "Icono publicado"
+    },
+    "look": "Diseño muy despejado y casi monocromo. El mes aparece centrado en mayúsculas, las líneas semanales son discretas y las fechas de meses vecinos se atenúan. Los eventos ocupan pequeñas bandas dentro de las celdas; la selección se distingue mediante un contorno vertical redondeado.",
+    "elements": [
+      "Cabecera con menú, búsqueda y acceso a hoy.",
+      "Cuadrícula de siete columnas con domingos en rojo.",
+      "Evento con título dentro del día; selección con borde.",
+      "Entrada rápida y botón más en la parte inferior."
+    ],
+    "nav": "La guía oficial de Samsung de julio de 2022 indica deslizar a izquierda o derecha para cambiar de mes. Deslizar hacia arriba amplía información del día seleccionado; ese gesto no debe confundirse con un calendario mensual continuo.",
+    "status": "Paginación horizontal documentada",
+    "continuity": "No acreditada en la referencia",
+    "confidence": "Alta para la guía de 2022; no se ha ensayado la versión One UI 6.",
+    "icon_note": "Icono oficial de fondo verde y hoja blanca. Se conserva el recurso publicado y su número de ejemplo.",
+    "caveat": "Las capturas con anotaciones azules proceden del tutorial oficial; las flechas o bordes añadidos por la guía no son componentes permanentes de la aplicación.",
+    "shots": [
+      {
+        "group": "samsung",
+        "id": "guia_02",
+        "url": "https://www.techbone.de/media/files/de/samsung-android-14---one-ui-6-men-1726045709.webp",
+        "page": "https://www.techbone.de/samsung/galaxy/kalender-app-ansicht-aendern",
+        "alt": "Paso 2 de la guía",
+        "file": "01_samsung/01_mes.png",
+        "width": 498,
+        "height": 1080,
+        "title": "Mes completo",
+        "caption": "Septiembre en One UI 6; permite estudiar la densidad y los límites de celda.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "samsung_official",
+        "id": "oficial_06",
+        "url": "https://images.samsung.com/is/image/samsung/assets/de/support/mobile-devices/termine-in-der-kalender-app-auf-deinem-samsung-galaxy-smartphone-hinzufugen-und-verwalten/delete_event_select_date_step01.png",
+        "page": "https://www.samsung.com/de/support/mobile-devices/kalender-app-verwenden/",
+        "alt": "Kalender-Monatsansicht mit Termin",
+        "file": "01_samsung/02_mes_con_evento.png",
+        "width": 450,
+        "height": 802,
+        "title": "Mes con evento",
+        "caption": "Referencia oficial con un evento y un día seleccionado; anotaciones del tutorial.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "samsung",
+        "id": "guia_03",
+        "url": "https://www.techbone.de/media/files/de/samsung-android-14---one-ui-6-ansicht-ndern.webp",
+        "page": "https://www.techbone.de/samsung/galaxy/kalender-app-ansicht-aendern",
+        "alt": "Paso 3 de la guía",
+        "file": "01_samsung/03_menu_vistas.png",
+        "width": 498,
+        "height": 1080,
+        "title": "Selección de vistas",
+        "caption": "Menú con Año, Mes, Semana, Día y agenda; se incluye como contexto.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Guía visual One UI 6",
+        "https://www.techbone.de/samsung/galaxy/kalender-app-ansicht-aendern"
+      ],
+      [
+        "Pantallas e icono oficiales",
+        "https://www.samsung.com/de/support/mobile-devices/kalender-app-verwenden/"
+      ],
+      [
+        "Gestos oficiales de navegación, 2022",
+        "https://www.samsung.com/sg/support/mobile-devices/how-can-i-use-the-calendar-app-on-my-samsung-smartphone/"
+      ]
+    ]
+  },
+  {
+    "id": "apple",
+    "folder": "02_apple",
+    "name": "Apple Calendar",
+    "system": "iPhone y iOS",
+    "version": "Guía oficial consultada en noviembre de 2026 y capturas de la beta iOS 18 publicadas en junio de 2024.",
+    "icon": {
+      "group": "apple",
+      "id": "icono_tienda",
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/ca/5a/cd/ca5acd85-c64d-f468-00f9-50fdc4819e59/calendarCalistoga-0-0-1x_U007epad-0-1-0-85-220.png/512x512bb.jpg",
+      "page": "https://apps.apple.com/us/app/calendar/id1108185179?uo=4",
+      "alt": "Icono de App Store",
+      "file": "02_apple/icono.png",
+      "width": 512,
+      "height": 512,
+      "title": "Icono de Apple Calendar",
+      "caption": "Recurso de App Store consultado el 19 noviembre 2026; no se atribuye a la beta iOS 18.",
+      "kind": "Icono de tienda"
+    },
+    "look": "El nombre del mes es grande y contundente. El espacio entre semanas y el volumen de información cambian con el modo elegido: indicadores compactos, barras apiladas, títulos detallados o mes con lista inferior. En la beta oscura, las acciones usan rojo y los eventos adoptan colores de calendario.",
+    "elements": [
+      "Nombre del mes y acceso al año.",
+      "Selector de presentación, búsqueda y más.",
+      "Separadores horizontales entre semanas.",
+      "Eventos con texto o indicadores según el modo; controles inferiores."
+    ],
+    "nav": "Es una referencia útil para una cuadrícula vertical de semanas y para variar la densidad. Las composiciones muestran continuaciones al borde inferior y filas de distinta altura. No se ha probado en dispositivo si la versión actual permite detener el desplazamiento libremente entre dos meses.",
+    "status": "Continuación vertical visible; gesto por confirmar",
+    "continuity": "Candidato visual, no ensayo de interacción",
+    "confidence": "Alta para los modos oficiales; la continuidad libre no se certifica.",
+    "icon_note": "Hoja clara con día de la semana y número. El icono de tienda es una referencia independiente de las capturas de iOS 18.",
+    "caveat": "Las imágenes de 2024 corresponden a una beta: no son capturas del iOS actual. La ilustración de Apple se identifica por separado.",
+    "shots": [
+      {
+        "group": "apple",
+        "id": "mes_documentacion",
+        "url": "https://ipcdn-web.apple.com/assets/v2/web/dedc81b7-7a7f-4c13-ad74-baa342939562",
+        "page": "https://support.apple.com/en-gb/guide/iphone/iphfd1054569/ios",
+        "alt": "A calendar in Month view showing events and reminders.",
+        "file": "02_apple/01_mes_oficial.png",
+        "width": 490,
+        "height": 1008,
+        "title": "Mes con detalles en la guía oficial",
+        "caption": "Imagen de Apple consultada en 2026; terminal concreto no identificado.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "apple18",
+        "id": "ios-18-calendar-views",
+        "url": "https://images.macrumors.com/article-new/2024/06/ios-18-calendar-views.jpg",
+        "page": "https://www.macrumors.com/2024/06/18/ios-18-whats-new-in-the-calendar-app/",
+        "alt": "ios-18-calendar-views",
+        "file": "02_apple/02_modos_beta_ios18.png",
+        "width": 4377,
+        "height": 2796,
+        "title": "Modos de la beta iOS 18",
+        "caption": "Composición editorial con varios modos y anotaciones de MacRumors.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "apple18",
+        "id": "details-calendar-view",
+        "url": "https://images.macrumors.com/article-new/2024/06/details-calendar-view.jpg",
+        "page": "https://www.macrumors.com/2024/06/18/ios-18-whats-new-in-the-calendar-app/",
+        "alt": "details-calendar-view",
+        "file": "02_apple/03_densidad_beta_ios18.png",
+        "width": 4377,
+        "height": 2796,
+        "title": "Densidad y detalle en iOS 18 beta",
+        "caption": "Compara dos densidades mensuales y una vista con lista inferior.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Modos mensuales oficiales",
+        "https://support.apple.com/en-gb/guide/iphone/iphfd1054569/ios"
+      ],
+      [
+        "Capturas de iOS 18 beta, junio de 2024",
+        "https://www.macrumors.com/2024/06/18/ios-18-whats-new-in-the-calendar-app/"
+      ],
+      [
+        "Icono de App Store",
+        "https://apps.apple.com/us/app/calendar/id1108185179?uo=4"
+      ]
+    ]
+  },
+  {
+    "id": "google",
+    "folder": "03_google",
+    "name": "Google Calendar",
+    "system": "Pixel y otros Android, incluido Samsung",
+    "version": "Imagen del usuario sin versión identificada y recursos de Google Play consultados el 19 noviembre 2026.",
+    "icon": {
+      "group": "google_store",
+      "id": "icono",
+      "url": "https://play-lh.googleusercontent.com/vEoqLbT_QkYcEaawWBRc22N6i98OUtOUpM1LmKdVs_xx7lCsUyFfV0ZiqoUXjMijUteiBhhN4K5MpoF96FRNOg=w512-h512",
+      "page": "https://play.google.com/store/apps/details?id=com.google.android.calendar&hl=en",
+      "alt": "Icono de tienda",
+      "file": "03_google/icono.png",
+      "width": 512,
+      "height": 512,
+      "title": "Icono de Google Calendar",
+      "caption": "Recurso de Google Play consultado el 19 noviembre 2026.",
+      "kind": "Icono de tienda"
+    },
+    "look": "La referencia aportada organiza cada día como una tarjeta muy alta y redondeada sobre un fondo gris claro. Las etiquetas de evento son bandas de color con texto blanco truncado. La cabecera reúne el mes, búsqueda, hoy, tareas y cuenta; el botón más flota abajo a la derecha.",
+    "elements": [
+      "Menú lateral y mes desplegable.",
+      "Siete columnas y varias filas de días.",
+      "Bandas de eventos por color de calendario.",
+      "Fechas del mes vecino al final y botón más flotante."
+    ],
+    "nav": "La ayuda oficial documenta la selección de Mes y un selector de fecha cuyos meses se recorren horizontalmente. Eso no prueba por sí solo el gesto de la cuadrícula principal. Hay reportes de usuarios de 2024 sobre paginación horizontal; la captura enviada no permite verificar el gesto ni un scroll mensual libre.",
+    "status": "Continuidad libre no acreditada",
+    "continuity": "No confundir selector de fecha con cuadrícula",
+    "confidence": "Alta para el diseño visible; limitada para el movimiento en la versión aportada.",
+    "icon_note": "El recurso de tienda consultado tiene un 31 blanco sobre una forma azul con volumen. En capturas anteriores aparece el icono multicolor plano; no se mezclan como si fueran el mismo archivo.",
+    "caveat": "La imagen enviada parece Google Calendar por la cuenta, el acceso a tareas y la estructura de la cabecera. Es una atribución visual, no una lectura de la información de la app.",
+    "shots": [
+      {
+        "group": "usuario",
+        "id": "referencia",
+        "file": "00_referencia_usuario/referencia_original.png",
+        "page": "Imagen adjuntada por el usuario en esta conversación",
+        "url": "",
+        "title": "La referencia aportada",
+        "caption": "Interfaz atribuible visualmente a Google Calendar sobre un Samsung; la versión de la aplicación no está identificada.",
+        "kind": "Imagen aportada por el usuario",
+        "width": 945,
+        "height": 2048
+      },
+      {
+        "group": "google_store",
+        "id": "tienda_05",
+        "url": "https://play-lh.googleusercontent.com/lgXk86QTxH5QmaM4tsZ-AbpRIRZXlytWtiBsuv3gGOi6YFngi6Yq4q5uhJNt4AdUI8pYH_J0PNgJlPPzAdN0B80=w1200",
+        "page": "https://play.google.com/store/apps/details?id=com.google.android.calendar&hl=en",
+        "alt": "Imagen promocional de tienda 5",
+        "file": "03_google/01_mes_tienda.png",
+        "width": 1080,
+        "height": 1920,
+        "title": "Mes en la ficha de Google Play",
+        "caption": "Imagen promocional con marco de teléfono y texto comercial.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "google_store",
+        "id": "tienda_07",
+        "url": "https://play-lh.googleusercontent.com/4_vVundk_UOpxGElaS_52oLXO4e0Llif03NinRzYuNU0_v0OskSXMrd8FJkDus_xB_mHqW1AOMcN1zCxqqDH=w1200",
+        "page": "https://play.google.com/store/apps/details?id=com.google.android.calendar&hl=en",
+        "alt": "Imagen promocional de tienda 7",
+        "file": "03_google/02_menu_vistas.png",
+        "width": 1080,
+        "height": 1920,
+        "title": "Menú de vistas",
+        "caption": "Material promocional: incluye la opción Month y los calendarios visibles.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Ayuda oficial de vistas",
+        "https://support.google.com/calendar/answer/6110849?co=GENIE.Platform%3DAndroid&hl=en"
+      ],
+      [
+        "Recursos oficiales de Google Play",
+        "https://play.google.com/store/apps/details?id=com.google.android.calendar"
+      ],
+      [
+        "Reporte comunitario sobre paginación, diciembre 2024",
+        "https://support.google.com/calendar/thread/312779741/google-calendar-s-core-navigation-is-fundamentally-counterintuitive?hl=en"
+      ]
+    ]
+  },
+  {
+    "id": "xiaomi",
+    "folder": "04_xiaomi",
+    "name": "Xiaomi Mi Calendar",
+    "system": "MIUI y HyperOS; variante según región",
+    "version": "Archivo de Uptodown con capturas de 2018 y 2023; no se conoce la versión exacta que produjo cada imagen.",
+    "icon": {
+      "group": "mi_native",
+      "id": "ref_16",
+      "url": "https://img.utdstc.com/icon/aaa/09c/aaa09ca1f6cc47903d08be72dee815b9e2892aa733c1cba3b589f1195bba50d6",
+      "page": "https://xiaomi-calendar.en.uptodown.com/android",
+      "alt": "Mi Calendar icon",
+      "file": "04_xiaomi/icono.png",
+      "width": 100,
+      "height": 100,
+      "title": "Icono de Mi Calendar",
+      "caption": "Recurso publicado en la ficha de Uptodown; 100 píxeles de origen.",
+      "kind": "Icono publicado"
+    },
+    "look": "La referencia propia de Xiaomi dedica la parte superior a un mes compacto y la inferior a tarjetas de agenda o notas. En oscuro, números blancos y grises sobre negro con un día seleccionado azul. La referencia antigua clara utiliza una cabecera lavanda. No llena cada día con grandes títulos como el ejemplo de Google.",
+    "elements": [
+      "Cabecera de mes y selector de vista.",
+      "Mes compacto de siete columnas.",
+      "Selección circular azul y días adyacentes atenuados.",
+      "Agenda, notas o módulos informativos bajo el mes."
+    ],
+    "nav": "Las capturas prueban el mes y la agenda inferior, pero no el movimiento continuo entre meses. En Xiaomi también existe la variante Google Calendar: Xiaomi documenta esa app en REDMI Note 12 y la guía de HyperOS 2 la muestra explícitamente.",
+    "status": "Mi Calendar: gesto no verificado",
+    "continuity": "Google en Xiaomi es otra aplicación",
+    "confidence": "Alta para las imágenes; sin comprobación de continuidad de la app propia.",
+    "icon_note": "Mi Calendar usa una hoja clara con SUN y número negro. Se añade también el icono Google observado en HyperOS 2 como variante separada.",
+    "caveat": "La ficha del repositorio puede mostrar hoy una versión nueva mientras mantiene capturas antiguas. No se atribuyen esas pantallas a HyperOS 4 ni a la versión anunciada en la ficha.",
+    "shots": [
+      {
+        "group": "mi_native",
+        "id": "ref_21",
+        "url": "https://img.utdstc.com/screen/c7f/138/c7f1381ac26fdb3438479e4f33ad12119a1044bbcb9d0558d5b554db65fea9fe:800",
+        "page": "https://xiaomi-calendar.en.uptodown.com/android",
+        "alt": "Mi Calendar screenshot 2",
+        "file": "04_xiaomi/01_mes_oscuro.png",
+        "width": 360,
+        "height": 800,
+        "title": "Mi Calendar mensual oscuro",
+        "caption": "La imagen muestra marzo de 2023; versión exacta de captura desconocida.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "mi_native",
+        "id": "ref_23",
+        "url": "https://img.utdstc.com/screen/d2d/6b0/d2d6b091145a967d9337b2923fa49c279be34fa13881c5fc709bd344cade75c4:800",
+        "page": "https://xiaomi-calendar.en.uptodown.com/android",
+        "alt": "Mi Calendar screenshot 4",
+        "file": "04_xiaomi/02_mes_agenda.png",
+        "width": 360,
+        "height": 800,
+        "title": "Agenda y franja de fechas",
+        "caption": "Vista alternativa para comparar la separación entre fechas y lista.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "mi_legacy",
+        "id": "ref_20",
+        "url": "https://img.utdstc.com/screen/42b/23a/42b23ab0b9d5f55fbdbb625e07fd00d11589f03381f227bbcc6af6087590d43d:800",
+        "page": "https://mi-calendar.en.uptodown.com/android",
+        "alt": "Mi Calendar screenshot 1",
+        "file": "04_xiaomi/03_mes_claro_archivo.png",
+        "width": 449,
+        "height": 800,
+        "title": "Mi Calendar claro de archivo",
+        "caption": "Imagen con diciembre de 2018, cabecera lavanda y agenda inferior.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "xiaomi_google",
+        "id": "guia_02",
+        "url": "https://www.techbone.de/media/files/de/xiaomi-android-15---hyperos-2-men-1736831175.webp",
+        "page": "https://www.techbone.de/xiaomi/smartphone/kalender-app-ansicht-aendern",
+        "alt": "Paso 2",
+        "file": "04_xiaomi/04_google_hyperos2.png",
+        "width": 486,
+        "height": 1080,
+        "title": "Google Calendar en HyperOS 2",
+        "caption": "Android 15 y HyperOS 2 según TechBone. No es el diseño de Mi Calendar.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Archivo visual Mi Calendar",
+        "https://xiaomi-calendar.en.uptodown.com/android"
+      ],
+      [
+        "Referencia clara antigua",
+        "https://mi-calendar.en.uptodown.com/android"
+      ],
+      [
+        "Google Calendar en HyperOS 2",
+        "https://www.techbone.de/xiaomi/smartphone/kalender-app-ansicht-aendern"
+      ],
+      [
+        "Xiaomi confirma Google Calendar en REDMI Note 12",
+        "https://www.mi.com/uk/support/article/KA-111344/"
+      ]
+    ]
+  },
+  {
+    "id": "oppo",
+    "folder": "05_oppo",
+    "name": "Calendario observado en OPPO",
+    "system": "OPPO y ColorOS 11",
+    "version": "Android 11 y ColorOS 11 según la guía visual; aplicación identificada en su menú como Google Calendar.",
+    "icon": {
+      "group": "oppo",
+      "id": "guia_01",
+      "url": "https://www.techbone.net/media/oppo-how-to-change-calendar-view-android-11-coloros-11-0-step-1-29276.webp",
+      "page": "https://www.techbone.net/oppo/smartphone/calendar-view",
+      "alt": "Paso 1 de la guía",
+      "file": "05_oppo/icono_google_en_oppo.png",
+      "width": 105,
+      "height": 105,
+      "title": "Icono observado en OPPO",
+      "caption": "Recorte del acceso a Google Calendar en la captura de ColorOS 11.",
+      "kind": "Recorte de captura",
+      "crop": [
+        307,
+        1122,
+        412,
+        1227
+      ]
+    },
+    "look": "La pantalla observada utiliza una cuadrícula mensual de gran altura, líneas finas grises y un pequeño evento azul. El día actual se marca con un círculo azul. El mes y los controles se alinean arriba; el botón de creación queda en la esquina inferior.",
+    "elements": [
+      "Cabecera con menú, mes, búsqueda, hoy y opciones.",
+      "Siete columnas con cinco o seis filas.",
+      "Día destacado en azul y evento con título abreviado.",
+      "Menú lateral con Month y el nombre Google Calendar."
+    ],
+    "nav": "Para esta referencia se aplica la distinción de Google Calendar entre selector y cuadrícula principal. No se ha acreditado una modalidad de scroll mensual continuo ni se ha probado el gesto en ese terminal.",
+    "status": "Google Calendar, no interfaz propia acreditada",
+    "continuity": "No verificada",
+    "confidence": "Alta para identificar Google: el menú lo nombra.",
+    "icon_note": "El icono multicolor con 31 se recorta de la pantalla original para corresponder a esta referencia histórica, en lugar de sustituirlo por el icono de tienda actual.",
+    "caveat": "No se ha obtenido una secuencia mensual verificable de una app propia de OPPO para otras regiones. Este kit documenta la configuración observada y no la generaliza a todo ColorOS.",
+    "shots": [
+      {
+        "group": "oppo",
+        "id": "guia_02",
+        "url": "https://www.techbone.net/media/oppo-how-to-change-calendar-view-android-11-coloros-11-0-step-2-29277.webp",
+        "page": "https://www.techbone.net/oppo/smartphone/calendar-view",
+        "alt": "Paso 2 de la guía",
+        "file": "05_oppo/01_mes.png",
+        "width": 720,
+        "height": 1600,
+        "title": "Mes completo en OPPO",
+        "caption": "Captura de la guía ColorOS 11; contiene la marca de agua de TechBone.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "oppo",
+        "id": "guia_03",
+        "url": "https://www.techbone.net/media/oppo-how-to-change-calendar-view-android-11-coloros-11-0-step-3-29278.webp",
+        "page": "https://www.techbone.net/oppo/smartphone/calendar-view",
+        "alt": "Paso 3 de la guía",
+        "file": "05_oppo/02_menu_identidad.png",
+        "width": 720,
+        "height": 1600,
+        "title": "El menú identifica Google Calendar",
+        "caption": "Prueba visual de la aplicación utilizada en esta guía.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Guía visual de OPPO",
+        "https://www.techbone.net/oppo/smartphone/calendar-view"
+      ],
+      [
+        "Ayuda de la aplicación Google Calendar",
+        "https://support.google.com/calendar/answer/6110849?co=GENIE.Platform%3DAndroid&hl=en"
+      ]
+    ]
+  },
+  {
+    "id": "huawei",
+    "folder": "06_huawei",
+    "name": "Huawei Calendar",
+    "system": "Huawei y EMUI 12",
+    "version": "Android 10 y EMUI 12 según la secuencia visual.",
+    "icon": {
+      "group": "huawei",
+      "id": "guia_01",
+      "url": "https://www.techbone.de/media/files/de/huawei-android-10---emui-12-kalender-app-ffnen.webp",
+      "page": "https://www.techbone.de/huawei/smartphone/kalender-app-wochenbeginn-aendern",
+      "alt": "Paso 1 de la guía",
+      "file": "06_huawei/icono.png",
+      "width": 77,
+      "height": 77,
+      "title": "Icono observado de Huawei Calendar",
+      "caption": "Recorte de la pantalla de inicio de la guía EMUI 12.",
+      "kind": "Recorte de captura",
+      "crop": [
+        214,
+        788,
+        291,
+        865
+      ]
+    },
+    "look": "La vista mensual ocupa aproximadamente la mitad superior; la inferior se reserva para la agenda del día. El diseño es blanco y gris, con acentos azules. Una fila de pestañas visibles hace explícitas las vistas Año, Mes, Semana, Día y eventos.",
+    "elements": [
+      "Mes y año desplegables con búsqueda y menú.",
+      "Pestañas de vistas inmediatamente debajo.",
+      "Cuadrícula compacta y selección circular azul.",
+      "Separador, agenda inferior y botón más azul."
+    ],
+    "nav": "La coexistencia de mes y agenda se observa directamente. El desplazamiento de la agenda inferior no acredita continuidad de la cuadrícula mensual. La dirección y el ajuste final del gesto entre meses no se han comprobado para esta versión.",
+    "status": "Mes con agenda inferior",
+    "continuity": "No verificada",
+    "confidence": "Alta para la composición; sin prueba del gesto mensual.",
+    "icon_note": "Recorte de 77 píxeles con degradado azul, día de la semana y número 21. La fecha visible pertenece al instante capturado.",
+    "caveat": "Referencia EMUI 12: no se presenta como el calendario de HarmonyOS NEXT o de un dispositivo Huawei reciente.",
+    "shots": [
+      {
+        "group": "huawei",
+        "id": "guia_02",
+        "url": "https://www.techbone.de/media/files/de/huawei-android-10---emui-12-men-1708513309.webp",
+        "page": "https://www.techbone.de/huawei/smartphone/kalender-app-wochenbeginn-aendern",
+        "alt": "Paso 2 de la guía",
+        "file": "06_huawei/01_mes_agenda.png",
+        "width": 504,
+        "height": 1080,
+        "title": "Mes con agenda del día",
+        "caption": "Muestra febrero de 2024 y el día seleccionado.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "huawei",
+        "id": "guia_04",
+        "url": "https://www.techbone.de/media/files/de/huawei-android-10---emui-12-wochenbeginn.webp",
+        "page": "https://www.techbone.de/huawei/smartphone/kalender-app-wochenbeginn-aendern",
+        "alt": "Paso 4 de la guía",
+        "file": "06_huawei/02_ajustes_presentacion.png",
+        "width": 504,
+        "height": 1080,
+        "title": "Ajustes de presentación",
+        "caption": "Opciones de semana, días de fin de semana y otros ajustes; contexto de personalización.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Secuencia EMUI 12",
+        "https://www.techbone.de/huawei/smartphone/kalender-app-wochenbeginn-aendern"
+      ]
+    ]
+  },
+  {
+    "id": "business",
+    "folder": "07_business_calendar",
+    "name": "Business Calendar 2",
+    "system": "Android, alternativa especializada",
+    "version": "Recursos de tienda consultados en 2026 y pantallas históricas de la ayuda del desarrollador.",
+    "icon": {
+      "group": "business_store",
+      "id": "icono",
+      "url": "https://play-lh.googleusercontent.com/eKtR_2gSD6vRMoJ6UJ_PH7aBDayNquDOHOP_z9KV_ujK7xOVrLNEAUCtA1RBXw44wnsqkLMQymk8-YiHbxydywc=w512-h512",
+      "page": "https://play.google.com/store/apps/details?id=com.appgenix.bizcal&hl=en",
+      "alt": "Icono de tienda",
+      "file": "07_business_calendar/icono.png",
+      "width": 512,
+      "height": 512,
+      "title": "Icono de Business Calendar 2",
+      "caption": "Recurso publicado en Google Play consultado el 19 noviembre 2026.",
+      "kind": "Icono de tienda"
+    },
+    "look": "Cuadrícula densa y funcional, con eventos presentados como texto o barras. Una barra inferior permite distinguir calendarios por color. La ayuda muestra una ventana de detalle sobre el propio mes. Los materiales de tienda ilustran también temas claros y oscuros.",
+    "elements": [
+      "Mes y controles de vista en la cabecera.",
+      "Celdas con barras o títulos, según presentación.",
+      "Ventana superpuesta con los eventos del día.",
+      "Barra de calendarios y acción de creación."
+    ],
+    "nav": "Es el caso Android con continuidad documentada de forma explícita por su desarrollador: gestos verticales cortos ajustan al principio del mes; gestos largos recorren el límite entre meses; mantener el dedo y arrastrar permite avanzar gradualmente por semanas.",
+    "status": "Scroll mensual continuo documentado",
+    "continuity": "Sí, con ajuste según el gesto",
+    "confidence": "Alta documental; no se ha ejecutado la app en este trabajo.",
+    "icon_note": "El recurso de tienda usa un 30 multicolor sobre fondo oscuro. No se interpreta ese número como la fecha dinámica del teléfono.",
+    "caveat": "Las capturas del centro de ayuda tienen fechas de 2016 y 2020. Se separan de la promoción de tienda actual; algunas funciones y temas pueden depender de la edición.",
+    "shots": [
+      {
+        "group": "business_store",
+        "id": "tienda_02",
+        "url": "https://play-lh.googleusercontent.com/dFtKIYRQXQth3AuUNOcc1A2dTUu6NsE3-K12JkkqD49S60SZanJpAqZLxalGDlJnXwpybMCIb0o-h7YsiIQ2bSU=w1200",
+        "page": "https://play.google.com/store/apps/details?id=com.appgenix.bizcal&hl=en",
+        "alt": "Imagen promocional de tienda 2",
+        "file": "07_business_calendar/01_mes_tienda.png",
+        "width": 1200,
+        "height": 2134,
+        "title": "Mes en material de tienda",
+        "caption": "Imagen promocional con detalles superpuestos.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "business_help",
+        "id": "ref_01",
+        "url": "https://appgenix.uservoice.com/assets/100699410/PNG%20month%201.png",
+        "page": "https://appgenix.uservoice.com/knowledgebase/articles/428537-using-the-month-view",
+        "alt": "",
+        "file": "07_business_calendar/02_mes_barras.png",
+        "width": 350,
+        "height": 640,
+        "title": "Mes con barras",
+        "caption": "Referencia histórica de la ayuda del desarrollador.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "business_help",
+        "id": "ref_02",
+        "url": "https://appgenix.uservoice.com/assets/100699443/PNG%20month%202.png",
+        "page": "https://appgenix.uservoice.com/knowledgebase/articles/428537-using-the-month-view",
+        "alt": "",
+        "file": "07_business_calendar/03_mes_texto.png",
+        "width": 350,
+        "height": 640,
+        "title": "Mes con títulos",
+        "caption": "Mismo diseño de ayuda, con títulos en lugar de barras.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "business_help",
+        "id": "ref_03",
+        "url": "https://appgenix.uservoice.com/assets/100699542/PNG%20month%203.png",
+        "page": "https://appgenix.uservoice.com/knowledgebase/articles/428537-using-the-month-view",
+        "alt": "",
+        "file": "07_business_calendar/04_detalle_dia.png",
+        "width": 350,
+        "height": 640,
+        "title": "Detalle sin abandonar el mes",
+        "caption": "Ventana del día sobre la cuadrícula mensual.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Desarrollador: continuidad y gestos",
+        "https://appgenix.uservoice.com/knowledgebase/articles/428537-using-the-month-view"
+      ],
+      [
+        "Funciones oficiales",
+        "https://www.appgenix-software.com/business-calendar-features/"
+      ],
+      [
+        "Icono y promoción de tienda",
+        "https://play.google.com/store/apps/details?id=com.appgenix.bizcal"
+      ]
+    ]
+  },
+  {
+    "id": "moca",
+    "folder": "08_moca",
+    "name": "Monthly Calendar Moca",
+    "system": "iPhone, alternativa especializada",
+    "version": "Recursos de App Store consultados el 19 noviembre 2026; las imágenes promocionales no identifican su versión de captura.",
+    "icon": {
+      "group": "moca",
+      "id": "icono",
+      "file": "08_moca/icono.png",
+      "url": "https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/59/c0/4c/59c04cd0-a7d6-a76f-0df8-ed51e6de34e5/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg",
+      "page": "https://apps.apple.com/us/app/monthly-calendar-moca/id533031474",
+      "width": 512,
+      "height": 512,
+      "alt": "Icono de tienda",
+      "title": "Icono de Monthly Calendar Moca",
+      "caption": "Recurso de App Store consultado el 19 noviembre 2026.",
+      "kind": "Icono de tienda"
+    },
+    "look": "Presentación enfocada en el mes: cuadrícula fina, poco espacio decorativo y títulos pequeños por día. Una etiqueta de mes grande y muy tenue ayuda a situarse en la secuencia. La promoción muestra temas y controles de densidad sin abandonar la organización mensual.",
+    "elements": [
+      "Cabecera semanal fija en la composición mostrada.",
+      "Semanas enlazadas y rótulo tenue del mes.",
+      "Títulos de eventos en el color de su calendario.",
+      "Selección de día y herramientas en la parte inferior."
+    ],
+    "nav": "La descripción publicada por el desarrollador en App Store indica meses unidos verticalmente y desplazamiento continuo hacia arriba o abajo, incluyendo la transición al mes siguiente. Es la referencia iPhone que mejor acredita documentalmente el patrón solicitado.",
+    "status": "Meses unidos verticalmente documentados",
+    "continuity": "Sí, según el desarrollador",
+    "confidence": "Alta documental; sin prueba de animación ni rendimiento.",
+    "icon_note": "La imagen de tienda representa una pequeña hoja mensual bajo una cabecera turquesa. No es el icono de Apple Calendar.",
+    "caveat": "La promoción contiene marcos de iPhone antiguos. La fecha de consulta de la ficha no convierte esas imágenes en capturas recientes.",
+    "shots": [
+      {
+        "group": "moca",
+        "id": "tienda_02",
+        "file": "08_moca/01_limite_entre_meses.png",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/24/20/26/2420265b-a0f8-44ee-9dab-8c63350b64ad/917c5622-af11-4f18-85cc-a66a6e667876_Page2.png/392x696bb.png",
+        "page": "https://apps.apple.com/us/app/monthly-calendar-moca/id533031474",
+        "width": 392,
+        "height": 696,
+        "alt": "Promocional de tienda 2",
+        "title": "Límite entre meses",
+        "caption": "Imagen promocional con semanas de julio y agosto en la misma secuencia.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "moca",
+        "id": "tienda_03",
+        "file": "08_moca/02_rotulo_mes.png",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource122/v4/96/bb/cb/96bbcb51-12c2-c2a5-efb3-046892a07e96/b0f6bb1a-acae-48b5-a002-e23dd90625a5_Page3.png/392x696bb.png",
+        "page": "https://apps.apple.com/us/app/monthly-calendar-moca/id533031474",
+        "width": 392,
+        "height": 696,
+        "alt": "Promocional de tienda 3",
+        "title": "Rótulo de mes y cuadrícula",
+        "caption": "Promoción que presenta el desplazamiento como rápido y suave; no es una medición.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "moca",
+        "id": "tienda_04",
+        "file": "08_moca/03_temas.png",
+        "url": "https://is1-ssl.mzstatic.com/image/thumb/PurpleSource112/v4/5c/30/d1/5c30d105-2216-4224-14c3-c87f4f6dd6e4/0bcbecac-6e69-487b-ad28-127f83d322ca_Page4-3.png/392x696bb.png",
+        "page": "https://apps.apple.com/us/app/monthly-calendar-moca/id533031474",
+        "width": 392,
+        "height": 696,
+        "alt": "Promocional de tienda 4",
+        "title": "Variaciones de tema",
+        "caption": "Material de tienda con varias paletas.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Descripción y recursos del desarrollador en App Store",
+        "https://apps.apple.com/us/app/monthly-calendar-moca/id533031474"
+      ]
+    ]
+  },
+  {
+    "id": "acalendar",
+    "folder": "09_acalendar",
+    "name": "aCalendar",
+    "system": "Android, alternativa especializada",
+    "version": "Captura mensual oscura de la ficha de Google Play con octubre de 2018; versión exacta de la imagen no indicada.",
+    "icon": {
+      "group": "acal_store",
+      "id": "icono",
+      "url": "https://play-lh.googleusercontent.com/f7nj5nkQpWdOA-JP5bWDM8N6JjoUcNyGH9EMJvlFAyWThL00MPTGXeVIpVkiuwDNUbF2JqYBIlpfr3DlcXViQQ=w512-h512",
+      "page": "https://play.google.com/store/apps/details?id=org.withouthat.acalendar&hl=en",
+      "alt": "Icono de tienda",
+      "file": "09_acalendar/icono.png",
+      "width": 512,
+      "height": 512,
+      "title": "Icono de aCalendar",
+      "caption": "Recurso de Google Play consultado el 19 noviembre 2026.",
+      "kind": "Icono de tienda"
+    },
+    "look": "Cuadrícula de alta densidad, con pequeños títulos por día y barras que atraviesan varios días para eventos largos. En la muestra oscura, los fines de semana se distinguen con fondos de distinto tono y el evento usa color sobre el negro o gris del mes.",
+    "elements": [
+      "Mes y herramientas en una cabecera compacta.",
+      "Números de semana junto al calendario.",
+      "Eventos como texto y bandas de varios días.",
+      "Filas con días del siguiente mes al final."
+    ],
+    "nav": "El desarrollador documenta arriba/abajo para ir al periodo anterior o siguiente y desplazamiento de dos dedos para saltos mayores. Izquierda/derecha cambia entre las vistas Mes, Semana y Día. Una navegación vertical por periodos no demuestra, por sí sola, continuidad libre entre semanas.",
+    "status": "Navegación vertical por periodos",
+    "continuity": "No acreditada como scroll libre",
+    "confidence": "Alta para los gestos descritos por el desarrollador.",
+    "icon_note": "Hoja blanca con una a azul, borde inferior verde y fondo azul. El recurso de tienda y la pantalla mensual pueden ser de generaciones distintas.",
+    "caveat": "Se incorpora para distinguir dirección vertical de continuidad. No se presenta como otro ejemplo confirmado de la interacción de Business Calendar 2.",
+    "shots": [
+      {
+        "group": "acal_store",
+        "id": "tienda_04",
+        "url": "https://play-lh.googleusercontent.com/WNBwuZEOBfvbVEBIaIKo5w1Fo6718lkaTBlocXpXdOtd4x32rBfjVcc6tn4kU7KT3CdKZMuPSiub1EfakXyLZw=w1200",
+        "page": "https://play.google.com/store/apps/details?id=org.withouthat.acalendar&hl=en",
+        "alt": "Imagen promocional de tienda 4",
+        "file": "09_acalendar/01_mes_oscuro.png",
+        "width": 1080,
+        "height": 1920,
+        "title": "Mes de alta densidad",
+        "caption": "Captura publicada en Google Play; fecha visible de octubre de 2018.",
+        "kind": "Captura publicada"
+      },
+      {
+        "group": "acal_store",
+        "id": "tienda_05",
+        "url": "https://play-lh.googleusercontent.com/ykAGeP_ar5TkA4W_nmdbbBqRQOEzPk7rRJpEbudvFsfbNIhD3rOHwHJQzGkM4Qeh3e03v3UrStMAW76SfXRPdpI=w1200",
+        "page": "https://play.google.com/store/apps/details?id=org.withouthat.acalendar&hl=en",
+        "alt": "Imagen promocional de tienda 5",
+        "file": "09_acalendar/02_semana_contexto.png",
+        "width": 1080,
+        "height": 1920,
+        "title": "Semana como contexto",
+        "caption": "Vista semanal de la misma ficha; permite entender el cambio de vista, no se cuenta como mensual.",
+        "kind": "Captura publicada"
+      }
+    ],
+    "sources": [
+      [
+        "Gestos oficiales",
+        "https://acalendar.tapirapps.de/en/support/solutions/articles/36000009791-navigation-in-day-week-and-month-view"
+      ],
+      [
+        "Icono y capturas de tienda",
+        "https://play.google.com/store/apps/details?id=org.withouthat.acalendar"
+      ]
+    ]
+  }
+]

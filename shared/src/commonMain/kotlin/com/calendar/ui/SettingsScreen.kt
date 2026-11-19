@@ -84,6 +84,10 @@ fun SettingsScreen(
                 Opcion("Vertical continuo (semanas)", settings.scroll == AppSettings.VERTICAL) { onChange(settings.copy(scroll = AppSettings.VERTICAL)) }
                 Opcion("Horizontal (mes a mes)", settings.scroll == AppSettings.HORIZONTAL) { onChange(settings.copy(scroll = AppSettings.HORIZONTAL)) }
 
+                Titulo("Título del evento en el día")
+                Opcion("Una sola línea (se recorta)", !settings.wrapTitle) { onChange(settings.copy(wrapTitle = false)) }
+                Opcion("Varias líneas (con salto de línea)", settings.wrapTitle) { onChange(settings.copy(wrapTitle = true)) }
+
                 Titulo("Ajuste fino")
                 Deslizador("Redondeo de las celdas", settings.cornerDp ?: skin.cellCorner.value.toInt(), 0..20) { onChange(settings.copy(cornerDp = it)) }
                 Deslizador("Separación entre celdas", settings.gapDp ?: skin.cellGap.value.toInt(), 0..10) { onChange(settings.copy(gapDp = it)) }

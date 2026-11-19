@@ -57,6 +57,8 @@ data class CalendarSkin(
     /** Fondo y texto de la barra superior (null = sin barra, se pinta sobre el fondo). */
     val headerBg: Color? = null,
     val onHeader: Color = Color.Black,
+    /** El título del evento puede ocupar varias líneas en la celda del día (ajuste del usuario). */
+    val wrapTitle: Boolean = false,
 )
 
 /** Ajuste fino sobre la skin elegida (null = valor de la skin). Ver [AppSettings]. */
@@ -64,6 +66,7 @@ fun CalendarSkin.withTweaks(s: AppSettings): CalendarSkin = copy(
     cellCorner = s.cornerDp?.dp ?: cellCorner,
     cellGap = s.gapDp?.dp ?: cellGap,
     rowHeight = s.rowDp?.dp ?: rowHeight,
+    wrapTitle = s.wrapTitle,
 )
 
 private val DIAS_LETRA_LUN = listOf("L", "M", "X", "J", "V", "S", "D")

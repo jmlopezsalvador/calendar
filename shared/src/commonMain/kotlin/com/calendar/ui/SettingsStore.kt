@@ -29,6 +29,8 @@ data class AppSettings(
     val showGuide: Boolean = true,
     /** Color de los eventos generados: `random`, `default` (el de la marca) o el id de un color. */
     val genColor: String = "random",
+    /** Título del evento con salto de línea en la celda del día (false = una sola línea recortada). */
+    val wrapTitle: Boolean = false,
 ) {
     companion object {
         const val AUTO = "auto"
@@ -59,6 +61,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
         appIcon = prefs.getString("app_icon") ?: "google",
         showGuide = prefs.getBoolean("guide_show", true),
         genColor = prefs.getString("gen_color") ?: "random",
+        wrapTitle = prefs.getBoolean("wrap_title", false),
     )
 
     fun save(s: AppSettings) {
@@ -70,5 +73,6 @@ class SettingsStore(private val prefs: KeyValueStore) {
         prefs.putString("app_icon", s.appIcon)
         prefs.putBoolean("guide_show", s.showGuide)
         prefs.putString("gen_color", s.genColor)
+        prefs.putBoolean("wrap_title", s.wrapTitle)
     }
 }

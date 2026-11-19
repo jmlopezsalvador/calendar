@@ -82,12 +82,12 @@ fun InstructionsScreen(onClose: () -> Unit) {
             Item("Aspecto del calendario", "Elige la marca que imitar: Google, Google en Samsung, Apple, Samsung, OPPO, Xiaomi, Huawei, Business Calendar 2, Moca o aCalendar. «Automático» usa la del sistema: Samsung en un Samsung, Google en el resto de Android y Apple en iPhone.")
             Arte { ArtAjustes() }
             Item("Desplazamiento", "Vertical continuo (semanas seguidas, como Apple o Moca) u horizontal mes a mes (como Google o Samsung). «Según la marca» respeta el de cada una.")
-            Item("Ajuste fino", "Redondeo y separación de las celdas y altura de las filas, para clavar detalles de la versión de calendario que imites. Al cambiar de marca se restablece.")
+            Item("Ajuste fino", "«Título del evento en el día» (una línea recortada o varias líneas con salto de línea) y, en el ajuste fino, redondeo y separación de las celdas y altura de las filas, para clavar detalles de la versión de calendario que imites. Al cambiar de marca se restablece.")
             Item("Nombre e icono de la app", "En Android puedes elegir entre Calendar, Calendario y Agenda, y entre diez iconos de calendarios reales. Al elegir uno sale un aviso: la app se reiniciará para aplicarlo (Cancelar o Aplicar). En iPhone solo se puede cambiar el icono; el nombre no.")
             Item("Eventos aleatorios", "Rellena el calendario con eventos creíbles (gimnasio, dentista, peluquería…) para que parezca usado. Edita la lista de temas (uno por línea), elige cuántos meses hacia atrás y adelante, el porcentaje de días con evento y su color (aleatorio, el de la marca o uno fijo). No toca los días que ya tienen evento.")
 
             Seccion("Consejos")
-            P("• Prepara el calendario antes: elige la marca, rellena con eventos aleatorios y, si quieres, cambia el nombre y el icono.\n• Solo hay un evento por día: guardar sobre un día ocupado lo sustituye. Cada evento puede llevar un color (fila «Color» del formulario).\n• Para repetir el efecto, reinícialo con la pulsación larga en la esquina antes de empezar de nuevo.\n• La carta del evento de prueba es la que revelará la app: asegúrate de que coincide con la que quieres mostrar.")
+            P("• Prepara el calendario antes: elige la marca, rellena con eventos aleatorios y, si quieres, cambia el nombre y el icono.\n• Solo hay un evento por día: guardar sobre un día ocupado lo sustituye. Cada evento puede llevar un color (fila «Color» del formulario) y, si es de «Todo el día», rellena la celda entera del día.\n• Para repetir el efecto, reinícialo con la pulsación larga en la esquina antes de empezar de nuevo.\n• La carta del evento de prueba es la que revelará la app: asegúrate de que coincide con la que quieres mostrar.")
         }
     }
 }

@@ -223,13 +223,17 @@ private fun DayCell(
     modifier: Modifier,
     onClick: () -> Unit,
 ) {
+    // Evento de «Todo el día»: rellena la celda entera con el color del evento (salvo en las skins de puntos).
+    val relleno: Color? = event?.takeIf { it.allDay && skin.eventStyle != EventStyle.DOT }
+        ?.let { e -> e.color?.let { Color(it.argb) } ?: skin.chipColor }
+    val sobreRelleno = event?.color?.let { if (it.textoOscuro) Color.Black else Color.White } ?: skin.onChip
     val base = modifier.fillMaxSize().padding(skin.cellGap)
     val shaped = if (skin.cardCells) {
-        base.clip(RoundedCornerShape(skin.cellCorner)).background(skin.cellColor)
+        base.clip(RoundedCornerShape(skin.cellCorner)).background(relleno ?: skin.cellColor)
     } else {
         val linea = skin.dividerColor
         val vertical = skin.verticalLines
-        base.drawBehind {
+        base.then(if (relleno != null) Modifier.background(relleno) else Modifier).drawBehind {
             drawLine(linea, Offset(0f, 0f), Offset(size.width, 0f), strokeWidth = 1.dp.toPx())
             if (vertical) drawLine(linea, Offset(0f, 0f), Offset(0f, size.height), strokeWidth = 1.dp.toPx())
         }
@@ -246,24 +250,30 @@ private fun DayCell(
             } else {
                 Text(
                     etiqueta, Modifier.padding(horizontal = 7.dp, vertical = 2.dp),
-                    color = if (outsideMonth) skin.mutedColor.copy(alpha = 0.55f) else dayColor(skin, date),
+                    color = if (relleno != null) sobreRelleno else if (outsideMonth) skin.mutedColor.copy(alpha = 0.55f) else dayColor(skin, date),
                     fontSize = 15.sp, fontWeight = FontWeight.Medium, maxLines = 1, softWrap = false,
                 )
             }
-            if (event != null) when (skin.eventStyle) {
+            if (event != null && relleno != null) {
+                Text(
+                    event.title, Modifier.fillMaxWidth().padding(top = 3.dp, start = 3.dp, end = 2.dp),
+                    color = sobreRelleno, fontSize = if (skin.wrapTitle) 10.sp else 11.sp, lineHeight = 12.sp,
+                    maxLines = if (skin.wrapTitle) 5 else 1, overflow = TextOverflow.Ellipsis,
+                )
+            } else if (event != null) when (skin.eventStyle) {
                 EventStyle.BAND -> Box(
                     Modifier.padding(top = 3.dp, start = 1.dp, end = 1.dp).fillMaxWidth()
                         .clip(RoundedCornerShape(skin.chipCorner)).background(event.color?.let { Color(it.argb) } ?: skin.chipColor)
                         .padding(horizontal = 3.dp, vertical = 1.dp),
                 ) {
-                    Text(event.title, color = event.color?.let { if (it.textoOscuro) Color.Black else Color.White } ?: skin.onChip, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Clip)
+                    Text(event.title, color = event.color?.let { if (it.textoOscuro) Color.Black else Color.White } ?: skin.onChip, fontSize = if (skin.wrapTitle) 10.sp else 11.sp, lineHeight = 12.sp, maxLines = if (skin.wrapTitle) 5 else 1, overflow = if (skin.wrapTitle) TextOverflow.Ellipsis else TextOverflow.Clip)
                 }
                 EventStyle.TEXT -> Text(
                     event.title, Modifier.fillMaxWidth().padding(top = 3.dp, start = 2.dp, end = 1.dp),
                     color = event.color?.let { Color(it.argb) } ?: skin.chipColor,
                     fontSize = 11.sp, lineHeight = 13.sp,
                     // Una palabra suelta no se parte en dos líneas: se recorta con puntos suspensivos.
-                    maxLines = if (' ' in event.title.trim()) 2 else 1, overflow = TextOverflow.Ellipsis,
+                    maxLines = if (skin.wrapTitle) 5 else if (' ' in event.title.trim()) 2 else 1, overflow = TextOverflow.Ellipsis,
                 )
                 EventStyle.DOT -> Box(
                     Modifier.padding(top = 3.dp).size(5.dp).clip(CircleShape)

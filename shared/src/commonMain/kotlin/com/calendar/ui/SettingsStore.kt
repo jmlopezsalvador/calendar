@@ -25,6 +25,8 @@ data class AppSettings(
     /** Nombre e icono de la app (ids de AppIdentity). */
     val appName: String = "calendar",
     val appIcon: String = "google",
+    /** Mostrar la guía de inicio al arrancar la app. */
+    val showGuide: Boolean = true,
 ) {
     companion object {
         const val AUTO = "auto"
@@ -53,6 +55,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
         topics = prefs.getString("topics")?.takeIf { it.isNotBlank() },
         appName = prefs.getString("app_name") ?: "calendar",
         appIcon = prefs.getString("app_icon") ?: "google",
+        showGuide = prefs.getBoolean("guide_show", true),
     )
 
     fun save(s: AppSettings) {
@@ -62,5 +65,6 @@ class SettingsStore(private val prefs: KeyValueStore) {
         prefs.putString("topics", s.topics ?: "")
         prefs.putString("app_name", s.appName)
         prefs.putString("app_icon", s.appIcon)
+        prefs.putBoolean("guide_show", s.showGuide)
     }
 }

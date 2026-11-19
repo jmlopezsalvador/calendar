@@ -7,6 +7,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.calendar.domain.EventRepository
+import com.calendar.ui.guide.GuideDialog
+import com.calendar.ui.guide.InstructionsScreen
 import com.calendar.domain.MagicEngine
 import com.calendar.domain.ManualForce
 import com.calendar.domain.RandomEvents
@@ -27,6 +29,9 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
     val settingsStore = remember { SettingsStore(prefs) }
     var settings by remember { mutableStateOf(settingsStore.load()) }
     var showSettings by remember { mutableStateOf(false) }
+    var showInstructions by remember { mutableStateOf(false) }
+    // La guía se abre sola al iniciar si está activada; también se puede abrir desde Ajustes.
+    var showGuide by remember { mutableStateOf(settings.showGuide) }
     val base = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
     val skin = base.withTweaks(settings)
     val horizontal = settings.isHorizontal(base)
@@ -36,6 +41,11 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
     SystemBarsEffect()
     MaterialTheme {
         @Suppress("UNUSED_EXPRESSION") version
+        run pantallas@{
+        if (showInstructions) {
+            InstructionsScreen(onClose = { showInstructions = false })
+            return@pantallas
+        }
         if (showSettings) {
             SettingsScreen(
                 settings, onChange = { settings = it; settingsStore.save(it) },
@@ -53,10 +63,11 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                     settings = nuevo; settingsStore.save(nuevo)
                     platform.applyIdentity(n, i)
                 },
+                onShowGuide = { showGuide = true }, onShowInstructions = { showInstructions = true },
                 onForce = { f, c -> ManualForce.apply(engine, f, c).also { if (it) version++ } },
                 onClose = { showSettings = false },
             )
-            return@MaterialTheme
+            return@pantallas
         }
         // La lambda cambia con cada versión para que las celdas ya compuestas se repinten tras guardar/reiniciar.
         val eventos = remember(version) { { d: LocalDate -> repo.get(d) } }
@@ -70,6 +81,15 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                 onDelete = { engine.delete(d); version++; editing = null },
                 onDismiss = { editing = null },
             )
+        }
+        }
+        // La guía va la última para quedar por encima de cualquier pantalla.
+        if (showGuide) {
+            GuideDialog(noMostrarInicial = !settings.showGuide, onFinish = { noMostrar ->
+                showGuide = false
+                val nuevo = settings.copy(showGuide = !noMostrar)
+                settings = nuevo; settingsStore.save(nuevo)
+            })
         }
     }
 }

@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Switch
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +45,8 @@ fun SettingsScreen(
     restartsApp: Boolean,
     /** Aplica nombre e icono (ids). */
     onApplyIdentity: (String, String) -> Unit,
+    onShowGuide: () -> Unit,
+    onShowInstructions: () -> Unit,
     onClose: () -> Unit,
 ) {
     var atras by remember { mutableStateOf(1) }
@@ -62,6 +65,14 @@ fun SettingsScreen(
             Text("Ajustes", fontSize = 20.sp, color = Color.Black, modifier = Modifier.padding(start = 8.dp))
         }
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
+            Titulo("Guía e instrucciones")
+            Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                Text("Mostrar la guía al iniciar", fontSize = 16.sp, color = Color.Black, modifier = Modifier.weight(1f))
+                Switch(settings.showGuide, { onChange(settings.copy(showGuide = it)) })
+            }
+            TextButton(onClick = onShowGuide) { Text("Ver la guía ahora") }
+            TextButton(onClick = onShowInstructions) { Text("Instrucciones") }
+
             Titulo("Aspecto del calendario")
             Opcion("Automático (según el sistema: ${Skins.byId(systemSkinId()).nombre})", settings.skinId == AppSettings.AUTO) {
                 onChange(settings.copy(skinId = AppSettings.AUTO).clearTweaks())

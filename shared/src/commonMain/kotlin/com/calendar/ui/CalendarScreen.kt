@@ -226,7 +226,9 @@ private fun DayCell(
                 EventStyle.TEXT -> Text(
                     event.title, Modifier.fillMaxWidth().padding(top = 3.dp, start = 2.dp, end = 1.dp),
                     color = skin.chipColor.let { if (skin.background.luminance() < 0.5f) it.copy(alpha = 1f) else it },
-                    fontSize = 11.sp, lineHeight = 13.sp, maxLines = 2, overflow = TextOverflow.Clip,
+                    fontSize = 11.sp, lineHeight = 13.sp,
+                    // Una palabra suelta no se parte en dos líneas: se recorta con puntos suspensivos.
+                    maxLines = if (' ' in event.title.trim()) 2 else 1, overflow = TextOverflow.Ellipsis,
                 )
                 EventStyle.DOT -> Box(
                     Modifier.padding(top = 3.dp).size(5.dp).clip(CircleShape)

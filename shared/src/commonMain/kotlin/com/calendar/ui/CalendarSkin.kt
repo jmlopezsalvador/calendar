@@ -4,9 +4,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
+/** Disposición de cabecera y elementos flotantes (solo atrezo) de cada familia de calendarios. */
+enum class Chrome { GOOGLE, APPLE, SAMSUNG }
+
+/** Cómo se rotulan los días de la semana: «D L M…», «lun mar…» o «LU. MA.…». */
+enum class WeekdayStyle { LETTER, SHORT3, UPPER2_DOT }
+
 /**
  * «Look and feel» de un calendario concreto. La pantalla mensual ([CalendarScreen]) es común y se pinta
- * con los valores de la skin; para añadir una marca basta con definir otra instancia.
+ * con los valores de la skin; para añadir una marca o variante basta con definir otra instancia.
  */
 data class CalendarSkin(
     val id: String,
@@ -26,6 +32,10 @@ data class CalendarSkin(
     val chipColor: Color,
     val onChip: Color,
     val chipCorner: Dp,
+    val chrome: Chrome,
+    val weekdayStyle: WeekdayStyle,
+    /** Desplazamiento por defecto de la marca: true = horizontal (paginado por meses), false = vertical continuo. */
+    val horizontalByDefault: Boolean,
     val dividerColor: Color = Color(0xFFE0E0E0),
     /** Color de sábado y domingo (null = el normal). */
     val weekendColor: Color? = null,
@@ -40,14 +50,43 @@ data class CalendarSkin(
     val monthOnFirst: Boolean = true,
 )
 
+/** Ajuste fino sobre la skin elegida (null = valor de la skin). Ver [AppSettings]. */
+fun CalendarSkin.withTweaks(s: AppSettings): CalendarSkin = copy(
+    cellCorner = s.cornerDp?.dp ?: cellCorner,
+    cellGap = s.gapDp?.dp ?: cellGap,
+    rowHeight = s.rowDp?.dp ?: rowHeight,
+)
+
+private val DIAS_LETRA_LUN = listOf("L", "M", "X", "J", "V", "S", "D")
+private val DIAS_3 = listOf("lun", "mar", "mié", "jue", "vie", "sáb", "dom")
+private val DIAS_2 = listOf("LU.", "MA.", "MI.", "JU.", "VI.", "SÁ.", "DO.")
+
+/** Rótulos de los días de la semana en el orden de la skin (lunes o domingo primero). */
+fun CalendarSkin.weekdayLabels(): List<String> {
+    val base = when (weekdayStyle) {
+        WeekdayStyle.LETTER -> DIAS_LETRA_LUN.map { if (it == "D") "D" else it }
+        WeekdayStyle.SHORT3 -> DIAS_3
+        WeekdayStyle.UPPER2_DOT -> DIAS_2
+    }
+    return if (mondayFirst) base else listOf(base.last()) + base.dropLast(1)
+}
+
 object Skins {
     /** Google Calendar (Android): tarjetas redondeadas blancas sobre gris azulado, bandas de evento de color. */
     val Google = CalendarSkin(
         id = "google", nombre = "Google Calendar", mondayFirst = true,
         background = Color(0xFFF0F4F9), cellColor = Color.White, cardCells = true, cellCorner = 8.dp, cellGap = 3.dp,
-        rowHeight = 96.dp, textColor = Color(0xFF1F1F1F), mutedColor = Color(0xFF747775),
+        rowHeight = 96.dp, textColor = Color(0xFF1F1F1F), mutedColor = Color(0xFF444746),
         accent = Color(0xFF0B57D0), onAccent = Color.White,
         chipColor = Color(0xFF039BE5), onChip = Color.White, chipCorner = 4.dp,
+        chrome = Chrome.GOOGLE, weekdayStyle = WeekdayStyle.SHORT3, horizontalByDefault = true,
+    )
+
+    /** Google Calendar tal como se ve en un Samsung: celdas sin redondeo, fondo lavanda muy claro, bandas pastel. */
+    val GoogleEnSamsung = Google.copy(
+        id = "google_samsung", nombre = "Google Calendar (en Samsung)",
+        background = Color(0xFFF8F9FD), cellColor = Color(0xFFF3F4FA), cellCorner = 0.dp, cellGap = 2.dp,
+        rowHeight = 100.dp, chipColor = Color(0xFF8F9BDB), chipCorner = 5.dp,
     )
 
     /** Apple Calendar (iOS): fondo blanco, celdas planas con línea fina, fin de semana gris, hoy en círculo rojo. */
@@ -57,6 +96,7 @@ object Skins {
         rowHeight = 92.dp, textColor = Color.Black, mutedColor = Color(0xFF8E8E93),
         accent = Color(0xFFFF3B30), onAccent = Color.White,
         chipColor = Color(0xFFCCE4FF), onChip = Color(0xFF0A4A99), chipCorner = 6.dp,
+        chrome = Chrome.APPLE, weekdayStyle = WeekdayStyle.LETTER, horizontalByDefault = false,
         dividerColor = Color(0xFFE5E5EA), weekendColor = Color(0xFF8E8E93),
         headerBold = true,
     )
@@ -65,13 +105,14 @@ object Skins {
     val Samsung = CalendarSkin(
         id = "samsung", nombre = "Samsung Calendar", mondayFirst = true,
         background = Color(0xFFFCFCFE), cellColor = Color(0xFFF6F5FA), cardCells = true, cellCorner = 6.dp, cellGap = 2.dp,
-        rowHeight = 90.dp, textColor = Color.Black, mutedColor = Color(0xFF9A9AA0),
+        rowHeight = 90.dp, textColor = Color.Black, mutedColor = Color(0xFF6E6E73),
         accent = Color.Black, onAccent = Color.White,
         chipColor = Color(0xFFFFC9C9), onChip = Color.Black, chipCorner = 2.dp,
+        chrome = Chrome.SAMSUNG, weekdayStyle = WeekdayStyle.UPPER2_DOT, horizontalByDefault = true,
         sundayColor = Color(0xFFD93025), todayCircle = false,
         headerCentered = true, headerUppercase = true, monthOnFirst = false,
     )
 
-    val all = listOf(Google, Apple, Samsung)
+    val all = listOf(Google, GoogleEnSamsung, Apple, Samsung)
     fun byId(id: String?): CalendarSkin = all.firstOrNull { it.id == id } ?: Google
 }

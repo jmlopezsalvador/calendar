@@ -10,15 +10,46 @@ interface KeyValueStore {
     fun putLong(key: String, value: Long)
 }
 
-/** Ajustes de la app. Ampliar aquí (y en load/save) cuando haya opciones reales. */
+/** Ajustes de la app. */
 data class AppSettings(
     /** `auto` = según el sistema; o el id de una skin de [Skins]. */
     val skinId: String = AUTO,
+    /** `auto` = según la marca, `vertical` (semanas continuas) u `horizontal` (mes a mes). */
+    val scroll: String = AUTO,
+    /** Ajuste fino sobre la skin (null = valor de la skin). */
+    val cornerDp: Int? = null,
+    val gapDp: Int? = null,
+    val rowDp: Int? = null,
 ) {
-    companion object { const val AUTO = "auto" }
+    companion object {
+        const val AUTO = "auto"
+        const val VERTICAL = "vertical"
+        const val HORIZONTAL = "horizontal"
+    }
+
+    /** ¿Desplazamiento horizontal para [skin]? */
+    fun isHorizontal(skin: CalendarSkin): Boolean = when (scroll) {
+        HORIZONTAL -> true
+        VERTICAL -> false
+        else -> skin.horizontalByDefault
+    }
+
+    fun clearTweaks() = copy(cornerDp = null, gapDp = null, rowDp = null)
 }
 
 class SettingsStore(private val prefs: KeyValueStore) {
-    fun load(): AppSettings = AppSettings(skinId = prefs.getString("skin") ?: AppSettings.AUTO)
-    fun save(s: AppSettings) { prefs.putString("skin", s.skinId) }
+    private fun opt(key: String): Int? = prefs.getLong(key, -1L).takeIf { it >= 0 }?.toInt()
+    private fun put(key: String, v: Int?) = prefs.putLong(key, v?.toLong() ?: -1L)
+
+    fun load(): AppSettings = AppSettings(
+        skinId = prefs.getString("skin") ?: AppSettings.AUTO,
+        scroll = prefs.getString("scroll") ?: AppSettings.AUTO,
+        cornerDp = opt("tw_corner"), gapDp = opt("tw_gap"), rowDp = opt("tw_row"),
+    )
+
+    fun save(s: AppSettings) {
+        prefs.putString("skin", s.skinId)
+        prefs.putString("scroll", s.scroll)
+        put("tw_corner", s.cornerDp); put("tw_gap", s.gapDp); put("tw_row", s.rowDp)
+    }
 }

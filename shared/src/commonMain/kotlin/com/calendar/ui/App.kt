@@ -22,7 +22,9 @@ fun CalendarRoot(prefs: KeyValueStore) {
     val settingsStore = remember { SettingsStore(prefs) }
     var settings by remember { mutableStateOf(settingsStore.load()) }
     var showSettings by remember { mutableStateOf(false) }
-    val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
+    val base = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
+    val skin = base.withTweaks(settings)
+    val horizontal = settings.isHorizontal(base)
     // Cada guardado incrementa la versión para recomponer las celdas.
     var version by remember { mutableStateOf(0) }
     var editing by remember { mutableStateOf<LocalDate?>(null) }
@@ -33,7 +35,7 @@ fun CalendarRoot(prefs: KeyValueStore) {
             SettingsScreen(settings, onChange = { settings = it; settingsStore.save(it) }, onClose = { showSettings = false })
             return@MaterialTheme
         }
-        CalendarScreen(skin, today, events = { repo.get(it) }, onDayClick = { editing = it }, onHeaderLongClick = { showSettings = true })
+        CalendarScreen(skin, horizontal, today, events = { repo.get(it) }, onDayClick = { editing = it }, onTitleLongPress = { showSettings = true })
         editing?.let { d ->
             EventEditor(
                 skin, d, repo.get(d),

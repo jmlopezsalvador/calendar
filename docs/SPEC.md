@@ -21,6 +21,7 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
 - **R2. Look and feel por marca.** Ajustes lista las marcas del kit y permite elegir una. Solo se replica la **pantalla del calendario**
   (vista mensual); el formulario de evento es común en estructura pero **tomando colores, tipografía y tipo de componentes de la marca elegida**.
   Marcas del kit: Samsung, Apple, Google, Xiaomi, OPPO (= Google), Huawei, Business Calendar 2, Monthly Calendar Moca, aCalendar.
+- **R2b. Acceso a Ajustes oculto:** pulsación larga en el título del mes (el espectador no ve ningún botón de ajustes).
 - **R3. Detección automática del sistema.** Opción «Automático» (por defecto): Android → plantilla Google (o Samsung/Xiaomi/Huawei/OPPO
   según `Build.MANUFACTURER`); iOS → Apple. El usuario puede cambiarla.
 - **R4. Vista mensual continua.** Al abrir, calendario mensual con scroll continuo entre meses (semanas contiguas que cruzan el límite de mes).

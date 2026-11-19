@@ -7,6 +7,9 @@ import androidx.compose.runtime.Composable
 @Composable
 actual fun SystemBarsEffect() {}
 
+actual fun systemSkinId(): String =
+    if (android.os.Build.MANUFACTURER.lowercase().contains("samsung")) "samsung" else "google"
+
 class SharedPrefsStore(context: Context) : KeyValueStore {
     private val p = context.getSharedPreferences("calendar", Context.MODE_PRIVATE)
     override fun getString(key: String): String? = p.getString(key, null)

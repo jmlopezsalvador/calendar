@@ -8,3 +8,6 @@ import androidx.compose.runtime.Composable
  */
 @Composable
 expect fun SystemBarsEffect()
+
+/** Id de la skin que corresponde al sistema (modo «Automático»): `apple`, `samsung`, `google`… */
+expect fun systemSkinId(): String

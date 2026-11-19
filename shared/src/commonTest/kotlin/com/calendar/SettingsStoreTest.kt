@@ -19,8 +19,8 @@ class SettingsStoreTest {
 
     @Test fun savesAndLoadsSettings() {
         val store = SettingsStore(MemoryStore())
-        assertEquals(0, store.load().counter)
-        store.save(AppSettings(counter = 7))
-        assertEquals(7, store.load().counter)
+        assertEquals(AppSettings.AUTO, store.load().skinId)
+        store.save(AppSettings(skinId = "apple"))
+        assertEquals("apple", store.load().skinId)
     }
 }

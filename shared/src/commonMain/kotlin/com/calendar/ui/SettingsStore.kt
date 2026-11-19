@@ -12,10 +12,13 @@ interface KeyValueStore {
 
 /** Ajustes de la app. Ampliar aquí (y en load/save) cuando haya opciones reales. */
 data class AppSettings(
-    val counter: Int = 0,
-)
+    /** `auto` = según el sistema; o el id de una skin de [Skins]. */
+    val skinId: String = AUTO,
+) {
+    companion object { const val AUTO = "auto" }
+}
 
 class SettingsStore(private val prefs: KeyValueStore) {
-    fun load(): AppSettings = AppSettings(counter = prefs.getLong("counter", 0L).toInt())
-    fun save(s: AppSettings) { prefs.putLong("counter", s.counter.toLong()) }
+    fun load(): AppSettings = AppSettings(skinId = prefs.getString("skin") ?: AppSettings.AUTO)
+    fun save(s: AppSettings) { prefs.putString("skin", s.skinId) }
 }

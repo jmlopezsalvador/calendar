@@ -10,6 +10,8 @@ import platform.Foundation.NSUserDefaults
 @Composable
 actual fun SystemBarsEffect() {}
 
+actual fun systemSkinId(): String = "apple"
+
 class UserDefaultsStore : KeyValueStore {
     private val d = NSUserDefaults.standardUserDefaults
     override fun getString(key: String): String? = d.stringForKey(key)

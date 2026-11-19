@@ -19,14 +19,21 @@ fun CalendarRoot(prefs: KeyValueStore) {
     val repo = remember { EventRepository(prefs) }
     val engine = remember { MagicEngine(repo) }
     val today = remember { Clock.System.todayIn(TimeZone.currentSystemDefault()) }
-    val skin = Skins.Google
+    val settingsStore = remember { SettingsStore(prefs) }
+    var settings by remember { mutableStateOf(settingsStore.load()) }
+    var showSettings by remember { mutableStateOf(false) }
+    val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
     // Cada guardado incrementa la versión para recomponer las celdas.
     var version by remember { mutableStateOf(0) }
     var editing by remember { mutableStateOf<LocalDate?>(null) }
     SystemBarsEffect()
     MaterialTheme {
         @Suppress("UNUSED_EXPRESSION") version
-        CalendarScreen(skin, today, events = { repo.get(it) }, onDayClick = { editing = it })
+        if (showSettings) {
+            SettingsScreen(settings, onChange = { settings = it; settingsStore.save(it) }, onClose = { showSettings = false })
+            return@MaterialTheme
+        }
+        CalendarScreen(skin, today, events = { repo.get(it) }, onDayClick = { editing = it }, onHeaderLongClick = { showSettings = true })
         editing?.let { d ->
             EventEditor(
                 skin, d, repo.get(d),

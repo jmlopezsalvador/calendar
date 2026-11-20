@@ -53,7 +53,7 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                     val topics = RandomEvents.parseTopics(settings.topics ?: "").ifEmpty { RandomEvents.DEFAULT_TOPICS }
                     val n = RandomEvents.fill(
                         repo, today.minus(atras, DateTimeUnit.MONTH), today.plus(adelante, DateTimeUnit.MONTH), topics, pct,
-                        colors = EventColor.pool(settings.genColor),
+                        colors = EventColor.pool(settings.genColor, EventColor.parseList(settings.genColors)),
                     )
                     version++
                     n

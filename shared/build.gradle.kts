@@ -21,6 +21,7 @@ kotlin {
             implementation(compose.foundation)
             implementation(compose.material3)
             implementation(compose.ui)
+            implementation(compose.components.resources)
             implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.6.1")
         }
         androidMain.dependencies {
@@ -28,6 +29,13 @@ kotlin {
         }
         commonTest.dependencies { implementation(kotlin("test")) }
     }
+}
+
+// Recursos compartidos (iconos de la app que se muestran en Ajustes): shared/src/commonMain/composeResources.
+compose.resources {
+    publicResClass = false
+    packageOfResClass = "com.calendar.res"
+    generateResClass = always
 }
 
 android {

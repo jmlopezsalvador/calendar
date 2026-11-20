@@ -63,12 +63,19 @@ class RandomEventsTest {
     @Test
     fun coloresFijoAleatorioYDeLaMarca() {
         val fijo = EventRepository(Mem())
-        RandomEvents.fill(fijo, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool("verde"))
+        RandomEvents.fill(fijo, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_CUSTOM, listOf(EventColor.VERDE)))
         assertTrue(fijo.all().all { it.color == EventColor.VERDE })
 
         val marca = EventRepository(Mem())
         RandomEvents.fill(marca, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_DEFAULT))
         assertTrue(marca.all().all { it.color == null })
+
+        val dos = EventRepository(Mem())
+        RandomEvents.fill(dos, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_CUSTOM, listOf(EventColor.ROJO, EventColor.AZUL)))
+        assertEquals(setOf<EventColor?>(EventColor.ROJO, EventColor.AZUL), dos.all().map { it.color }.toSet())
+
+        assertEquals(listOf<EventColor?>(null), EventColor.pool(EventColor.MODE_CUSTOM, emptyList()))
+        assertEquals(listOf(EventColor.AZUL, EventColor.VERDE), EventColor.parseList("azul, verde,xx"))
 
         val azar = EventRepository(Mem())
         RandomEvents.fill(azar, desde, hasta, listOf("X"), 100, Random(3), EventColor.pool(EventColor.MODE_RANDOM))

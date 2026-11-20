@@ -2,7 +2,11 @@ package com.calendar.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.ui.unit.Dp
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,6 +17,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Switch
@@ -106,7 +111,7 @@ fun SettingsScreen(
                 }
                 Titulo("Icono")
                 for (o in AppIdentity.icons) {
-                    Opcion(o.nombre, settings.appIcon == o.id) {
+                    OpcionConIcono(o.nombre, o.id, settings.appIcon == o.id) {
                         if (settings.appIcon != o.id) pendiente = settings.appName to o.id
                     }
                 }
@@ -125,10 +130,32 @@ fun SettingsScreen(
                 Deslizador("Días con evento (%)", porcentaje, 5..100) { porcentaje = it }
                 Titulo("Color de los eventos")
                 Opcion("Aleatorio (todos los colores)", settings.genColor == EventColor.MODE_RANDOM) { onChange(settings.copy(genColor = EventColor.MODE_RANDOM)) }
-                Opcion("El de la marca del calendario", settings.genColor == EventColor.MODE_DEFAULT) { onChange(settings.copy(genColor = EventColor.MODE_DEFAULT)) }
-                for (c in EventColor.entries) {
-                    Opcion("Siempre ${c.nombre.lowercase()}", settings.genColor == c.id) { onChange(settings.copy(genColor = c.id)) }
+                Opcion("Selección de colores", settings.genColor == EventColor.MODE_CUSTOM) { onChange(settings.copy(genColor = EventColor.MODE_CUSTOM)) }
+                if (settings.genColor == EventColor.MODE_CUSTOM) {
+                    val elegidos = EventColor.parseList(settings.genColors)
+                    Text(
+                        "Con un solo color, todos los eventos salen de ese color; con varios, al azar entre ellos.",
+                        fontSize = 13.sp, color = Color(0xFF5F6368), modifier = Modifier.padding(start = 8.dp, bottom = 4.dp),
+                    )
+                    for (c in EventColor.entries) {
+                        val marcado = c in elegidos
+                        Row(
+                            Modifier.fillMaxWidth().clickable {
+                                val nuevos = if (marcado) elegidos - c else elegidos + c
+                                onChange(settings.copy(genColors = nuevos.joinToString(",") { it.id }))
+                            }.padding(start = 12.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Checkbox(marcado, null)
+                            Box(Modifier.padding(start = 8.dp).size(18.dp).clip(CircleShape).background(Color(c.argb)))
+                            Text(c.nombre, fontSize = 16.sp, color = Color.Black, modifier = Modifier.padding(start = 10.dp).padding(vertical = 10.dp))
+                        }
+                    }
+                    if (elegidos.isEmpty()) {
+                        Text("Elige al menos un color; si no, se usa el de la marca.", fontSize = 13.sp, color = Color(0xFFB3261E), modifier = Modifier.padding(start = 8.dp))
+                    }
                 }
+                Opcion("El de la marca del calendario", settings.genColor == EventColor.MODE_DEFAULT) { onChange(settings.copy(genColor = EventColor.MODE_DEFAULT)) }
                 TextButton(onClick = {
                     val n = onGenerate(atras, adelante, porcentaje)
                     resultado = "Creados $n eventos (los días ocupados no se tocan)."
@@ -197,6 +224,16 @@ private fun Deslizador(texto: String, valor: Int, rango: IntRange, onChange: (In
             value = valor.toFloat(), onValueChange = { onChange(it.toInt()) },
             valueRange = rango.first.toFloat()..rango.last.toFloat(),
         )
+    }
+}
+
+/** Opción de icono de la app: botón de radio, la imagen del icono y su nombre. */
+@Composable
+private fun OpcionConIcono(texto: String, iconId: String, seleccionada: Boolean, onClick: () -> Unit) {
+    Row(Modifier.fillMaxWidth().clickable(onClick = onClick).padding(vertical = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+        RadioButton(selected = seleccionada, onClick = onClick)
+        IconoApp(iconId, 44.dp, Modifier.padding(start = 4.dp))
+        Text(texto, fontSize = 16.sp, color = Color.Black, modifier = Modifier.padding(start = 12.dp))
     }
 }
 

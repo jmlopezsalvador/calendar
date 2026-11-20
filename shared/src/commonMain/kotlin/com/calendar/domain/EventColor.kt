@@ -12,14 +12,22 @@ enum class EventColor(val id: String, val nombre: String, val argb: Long, val te
         /** Modo de color de los eventos generados: aleatorio, el de la marca o un color fijo. */
         const val MODE_RANDOM = "random"
         const val MODE_DEFAULT = "default"
+        /** Selección de colores: uno = todos iguales; varios = al azar entre ellos. */
+        const val MODE_CUSTOM = "custom"
 
         fun fromId(id: String?): EventColor? = entries.firstOrNull { it.id == id }
 
-        /** Colores entre los que elige el generador según el [mode] (`null` = el color propio de la marca). */
-        fun pool(mode: String): List<EventColor?> = when (mode) {
+        /** Colores guardados como «azul,verde» → lista (ignora ids desconocidos). */
+        fun parseList(text: String): List<EventColor> = text.split(',').mapNotNull { fromId(it.trim()) }
+
+        /**
+         * Colores entre los que elige el generador según el [mode] (`null` = el color propio de la marca).
+         * En modo selección se usan los [selected]; si no hay ninguno, el de la marca.
+         */
+        fun pool(mode: String, selected: List<EventColor> = emptyList()): List<EventColor?> = when (mode) {
             MODE_RANDOM -> entries
-            MODE_DEFAULT -> listOf(null)
-            else -> listOf(fromId(mode))
+            MODE_CUSTOM -> selected.ifEmpty { listOf(null) }
+            else -> listOf(null)
         }
     }
 }

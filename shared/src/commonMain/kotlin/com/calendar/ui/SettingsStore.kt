@@ -29,6 +29,8 @@ data class AppSettings(
     val showGuide: Boolean = true,
     /** Color de los eventos generados: `random`, `default` (el de la marca) o el id de un color. */
     val genColor: String = "random",
+    /** Colores elegidos en el modo `custom`, como ids separados por comas («azul,verde»). */
+    val genColors: String = "",
     /** Título del evento con salto de línea en la celda del día (false = una sola línea recortada). */
     val wrapTitle: Boolean = false,
 ) {
@@ -52,7 +54,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
     private fun opt(key: String): Int? = prefs.getLong(key, -1L).takeIf { it >= 0 }?.toInt()
     private fun put(key: String, v: Int?) = prefs.putLong(key, v?.toLong() ?: -1L)
 
-    fun load(): AppSettings = AppSettings(
+    fun load(): AppSettings = migrate(AppSettings(
         skinId = prefs.getString("skin") ?: AppSettings.AUTO,
         scroll = prefs.getString("scroll") ?: AppSettings.AUTO,
         cornerDp = opt("tw_corner"), gapDp = opt("tw_gap"), rowDp = opt("tw_row"),
@@ -61,8 +63,13 @@ class SettingsStore(private val prefs: KeyValueStore) {
         appIcon = prefs.getString("app_icon") ?: "google",
         showGuide = prefs.getBoolean("guide_show", true),
         genColor = prefs.getString("gen_color") ?: "random",
+        genColors = prefs.getString("gen_colors") ?: "",
         wrapTitle = prefs.getBoolean("wrap_title", false),
-    )
+    ))
+
+    /** Versiones anteriores guardaban un color fijo («verde»): pasa a ser una selección de un solo color. */
+    private fun migrate(s: AppSettings): AppSettings =
+        if (s.genColor in listOf("random", "default", "custom")) s else s.copy(genColor = "custom", genColors = s.genColor)
 
     fun save(s: AppSettings) {
         prefs.putString("skin", s.skinId)
@@ -73,6 +80,7 @@ class SettingsStore(private val prefs: KeyValueStore) {
         prefs.putString("app_icon", s.appIcon)
         prefs.putBoolean("guide_show", s.showGuide)
         prefs.putString("gen_color", s.genColor)
+        prefs.putString("gen_colors", s.genColors)
         prefs.putBoolean("wrap_title", s.wrapTitle)
     }
 }

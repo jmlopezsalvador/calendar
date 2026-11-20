@@ -52,6 +52,8 @@ fun SettingsScreen(
     onChange: (AppSettings) -> Unit,
     /** Genera eventos: (meses atrás, meses adelante, % de días) → nº de eventos creados. */
     onGenerate: (Int, Int, Int) -> Int,
+    /** Elimina todos los eventos del calendario y devuelve cuántos había. */
+    onDeleteAll: () -> Int,
     canRename: Boolean,
     restartsApp: Boolean,
     /** Aplica nombre e icono (ids). */
@@ -64,6 +66,9 @@ fun SettingsScreen(
     var adelante by remember { mutableStateOf(3) }
     var porcentaje by remember { mutableStateOf(30) }
     var resultado by remember { mutableStateOf<String?>(null) }
+    // Borrado total: 0 = sin diálogo, 1 = primer aviso, 2 = confirmación final.
+    var confirmaBorrado by remember { mutableStateOf(0) }
+    var borrado by remember { mutableStateOf<String?>(null) }
     // Cambio pendiente de confirmar: (nombre, icono) propuestos.
     var pendiente by remember { mutableStateOf<Pair<String, String>?>(null) }
     val skin = Skins.byId(if (settings.skinId == AppSettings.AUTO) systemSkinId() else settings.skinId)
@@ -73,6 +78,7 @@ fun SettingsScreen(
             Text("Ajustes", fontSize = 20.sp, color = Color.Black, modifier = Modifier.padding(start = 8.dp))
         }
         Column(Modifier.verticalScroll(rememberScrollState()).padding(horizontal = 16.dp)) {
+            // Orden: primero cómo se ve (aspecto y vista), luego los eventos, la identidad de la app y la ayuda.
             Seccion("Aspecto del calendario", inicial = true) {
                 Titulo("Marca")
                 Opcion("Automático (según el sistema: ${Skins.byId(systemSkinId()).nombre})", settings.skinId == AppSettings.AUTO) {
@@ -82,6 +88,14 @@ fun SettingsScreen(
                     Opcion(s.nombre, settings.skinId == s.id) { onChange(settings.copy(skinId = s.id).clearTweaks()) }
                 }
 
+                Titulo("Ajuste fino")
+                Deslizador("Redondeo de las celdas", settings.cornerDp ?: skin.cellCorner.value.toInt(), 0..20) { onChange(settings.copy(cornerDp = it)) }
+                Deslizador("Separación entre celdas", settings.gapDp ?: skin.cellGap.value.toInt(), 0..10) { onChange(settings.copy(gapDp = it)) }
+                Deslizador("Altura de fila (modo vertical)", settings.rowDp ?: skin.rowHeight.value.toInt(), 60..160) { onChange(settings.copy(rowDp = it)) }
+                TextButton(onClick = { onChange(settings.clearTweaks()) }) { Text("Restablecer ajuste fino") }
+            }
+
+            Seccion("Vista del calendario") {
                 Titulo("Desplazamiento")
                 Opcion("Según la marca (${if (skin.horizontalByDefault) "horizontal" else "vertical"})", settings.scroll == AppSettings.AUTO) {
                     onChange(settings.copy(scroll = AppSettings.AUTO))
@@ -92,33 +106,11 @@ fun SettingsScreen(
                 Titulo("Título del evento en el día")
                 Opcion("Una sola línea (se recorta)", !settings.wrapTitle) { onChange(settings.copy(wrapTitle = false)) }
                 Opcion("Varias líneas (con salto de línea)", settings.wrapTitle) { onChange(settings.copy(wrapTitle = true)) }
-
-                Titulo("Ajuste fino")
-                Deslizador("Redondeo de las celdas", settings.cornerDp ?: skin.cellCorner.value.toInt(), 0..20) { onChange(settings.copy(cornerDp = it)) }
-                Deslizador("Separación entre celdas", settings.gapDp ?: skin.cellGap.value.toInt(), 0..10) { onChange(settings.copy(gapDp = it)) }
-                Deslizador("Altura de fila (modo vertical)", settings.rowDp ?: skin.rowHeight.value.toInt(), 60..160) { onChange(settings.copy(rowDp = it)) }
-                TextButton(onClick = { onChange(settings.clearTweaks()) }) { Text("Restablecer ajuste fino") }
             }
 
-            Seccion("Nombre e icono de la app") {
-                if (canRename) {
-                    Titulo("Nombre")
-                    for (o in AppIdentity.names) {
-                        Opcion(o.nombre, settings.appName == o.id) {
-                            if (settings.appName != o.id) pendiente = o.id to settings.appIcon
-                        }
-                    }
-                }
-                Titulo("Icono")
-                for (o in AppIdentity.icons) {
-                    OpcionConIcono(o.nombre, o.id, settings.appIcon == o.id) {
-                        if (settings.appIcon != o.id) pendiente = settings.appName to o.id
-                    }
-                }
-            }
-
-            Seccion("Eventos aleatorios") {
-                Text("Temas (uno por línea)", fontSize = 15.sp, color = Color.Black, modifier = Modifier.padding(top = 8.dp))
+            Seccion("Eventos del calendario") {
+                Titulo("Generar eventos aleatorios")
+                Text("Temas (uno por línea)", fontSize = 15.sp, color = Color.Black)
                 OutlinedTextField(
                     value = settings.topics ?: RandomEvents.DEFAULT_TOPICS.joinToString("\n"),
                     onValueChange = { onChange(settings.copy(topics = it)) },
@@ -128,7 +120,7 @@ fun SettingsScreen(
                 Deslizador("Meses hacia atrás desde hoy", atras, 0..12) { atras = it }
                 Deslizador("Meses hacia adelante desde hoy", adelante, 0..24) { adelante = it }
                 Deslizador("Días con evento (%)", porcentaje, 5..100) { porcentaje = it }
-                Titulo("Color de los eventos")
+                Titulo("Color de los eventos generados")
                 Opcion("Aleatorio (todos los colores)", settings.genColor == EventColor.MODE_RANDOM) { onChange(settings.copy(genColor = EventColor.MODE_RANDOM)) }
                 Opcion("Selección de colores", settings.genColor == EventColor.MODE_CUSTOM) { onChange(settings.copy(genColor = EventColor.MODE_CUSTOM)) }
                 if (settings.genColor == EventColor.MODE_CUSTOM) {
@@ -161,6 +153,31 @@ fun SettingsScreen(
                     resultado = "Creados $n eventos (los días ocupados no se tocan)."
                 }) { Text("Generar eventos") }
                 resultado?.let { Text(it, fontSize = 14.sp, color = Color(0xFF5F6368)) }
+
+                Titulo("Limpieza")
+                Text(
+                    "Borra de golpe todos los eventos del calendario, incluido el «Feliz cumpleaños» del truco.",
+                    fontSize = 14.sp, color = Color(0xFF5F6368),
+                )
+                TextButton(onClick = { confirmaBorrado = 1 }) { Text("Eliminar todos los eventos", color = Color(0xFFB3261E)) }
+                borrado?.let { Text(it, fontSize = 14.sp, color = Color(0xFF5F6368)) }
+            }
+
+            Seccion("Nombre e icono de la app") {
+                if (canRename) {
+                    Titulo("Nombre")
+                    for (o in AppIdentity.names) {
+                        Opcion(o.nombre, settings.appName == o.id) {
+                            if (settings.appName != o.id) pendiente = o.id to settings.appIcon
+                        }
+                    }
+                }
+                Titulo("Icono")
+                for (o in AppIdentity.icons) {
+                    OpcionConIcono(o.nombre, o.id, settings.appIcon == o.id) {
+                        if (settings.appIcon != o.id) pendiente = settings.appName to o.id
+                    }
+                }
             }
 
             Seccion("Guía e instrucciones") {
@@ -192,6 +209,30 @@ fun SettingsScreen(
             },
             confirmButton = { TextButton(onClick = { pendiente = null; onApplyIdentity(n, i) }) { Text("Aplicar") } },
             dismissButton = { TextButton(onClick = { pendiente = null }) { Text("Cancelar") } },
+        )
+    }
+    if (confirmaBorrado == 1) {
+        AlertDialog(
+            onDismissRequest = { confirmaBorrado = 0 },
+            title = { Text("Eliminar todos los eventos") },
+            text = { Text("Se eliminarán TODOS los eventos del calendario, también el «Feliz cumpleaños» y el evento de prueba del truco. Esta acción no se puede deshacer.") },
+            confirmButton = { TextButton(onClick = { confirmaBorrado = 2 }) { Text("Continuar", color = Color(0xFFB3261E)) } },
+            dismissButton = { TextButton(onClick = { confirmaBorrado = 0 }) { Text("Cancelar") } },
+        )
+    }
+    if (confirmaBorrado == 2) {
+        AlertDialog(
+            onDismissRequest = { confirmaBorrado = 0 },
+            title = { Text("¿Seguro?") },
+            text = { Text("Última confirmación: se borrarán todos los eventos del calendario ahora mismo.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    confirmaBorrado = 0
+                    val n = onDeleteAll()
+                    borrado = if (n == 0) "No había eventos que eliminar." else "Se han eliminado $n eventos."
+                }) { Text("Eliminar todo", color = Color(0xFFB3261E)) }
+            },
+            dismissButton = { TextButton(onClick = { confirmaBorrado = 0 }) { Text("Cancelar") } },
         )
     }
 }

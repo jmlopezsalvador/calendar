@@ -148,4 +148,17 @@ class EventsTest {
         EventRepository(store).put(CalendarEvent(LocalDate(2026, 11, 6), "a", "b", allDay = true))
         assertEquals(true, EventRepository(store).get(LocalDate(2026, 11, 6))?.allDay)
     }
+
+    @Test
+    fun clearBorraTodosLosEventosYSePersiste() {
+        val store = MemoryStore()
+        val repo = EventRepository(store)
+        val engine = MagicEngine(repo)
+        repo.put(CalendarEvent(LocalDate(2026, 11, 3), "Dentista"))
+        engine.save(LocalDate(2026, 11, 19), "prueba 8C", "")
+        assertTrue(repo.all().size >= 3)
+        repo.clear()
+        assertTrue(repo.all().isEmpty())
+        assertTrue(EventRepository(store).all().isEmpty())
+    }
 }

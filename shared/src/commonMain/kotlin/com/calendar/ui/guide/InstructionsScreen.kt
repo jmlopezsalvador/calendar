@@ -79,11 +79,13 @@ fun InstructionsScreen(onClose: () -> Unit) {
 
             Seccion("Ajustes")
             Item("Guía e instrucciones", "Vuelve a ver la guía de inicio, actívala o desactívala al arrancar y abre estas instrucciones.")
+            Item("Cómo está organizado", "Los Ajustes tienen secciones plegables: Aspecto del calendario, Vista del calendario, Eventos del calendario, Nombre e icono de la app y Guía e instrucciones.")
             Item("Aspecto del calendario", "Elige la marca que imitar: Google, Google en Samsung, Apple, Samsung, OPPO, Xiaomi, Huawei, Business Calendar 2, Moca o aCalendar. «Automático» usa la del sistema: Samsung en un Samsung, Google en el resto de Android y Apple en iPhone.")
             Arte { ArtAjustes() }
             Item("Desplazamiento", "Vertical continuo (semanas seguidas, como Apple o Moca) u horizontal mes a mes (como Google o Samsung). «Según la marca» respeta el de cada una.")
             Item("Ajuste fino", "«Título del evento en el día» (una línea recortada o varias líneas con salto de línea) y, en el ajuste fino, redondeo y separación de las celdas y altura de las filas, para clavar detalles de la versión de calendario que imites. Al cambiar de marca se restablece.")
             Item("Nombre e icono de la app", "En Android puedes elegir entre Calendar, Calendario y Agenda, y entre diez iconos de calendarios reales, que se muestran como imagen en la lista. Al elegir uno sale un aviso: la app se reiniciará para aplicarlo (Cancelar o Aplicar). En iPhone solo se puede cambiar el icono; el nombre no.")
+            Item("Eliminar todos los eventos", "Dentro de «Eventos del calendario», en «Limpieza»: borra todos los eventos de golpe, también el «Feliz cumpleaños» y el evento de prueba. Pide dos confirmaciones porque no se puede deshacer.")
             Item("Eventos aleatorios", "Rellena el calendario con eventos creíbles (gimnasio, dentista, peluquería…) para que parezca usado. Edita la lista de temas (uno por línea), elige cuántos meses hacia atrás y adelante, el porcentaje de días con evento y su color: aleatorio, una selección de colores (uno = todos iguales; varios = al azar entre ellos) o el de la marca. No toca los días que ya tienen evento.")
 
             Seccion("Consejos")

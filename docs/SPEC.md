@@ -41,6 +41,7 @@ en el día de cumpleaños del espectador. Todo en local, sin red ni cuentas.
   Cada evento puede llevar un **color** (azul, verde, rojo, amarillo o naranja; sin elegir = el color propio de la marca) que se ve en su celda. Un evento de **«Todo el día»** rellena la celda entera del día con su color (salvo en las skins de puntos, Xiaomi y Huawei). Se ampliará más adelante.
 - **R7. Eventos sintéticos.** Función para rellenar aleatoriamente un rango de fechas con eventos creíbles (gimnasio, dentista,
   peluquería, cumpleaños, cita médica, quedada con amigos…). La lista de temas es editable en Ajustes, y también el color de los eventos generados: aleatorio entre todos, una **selección de colores** (con uno solo, todos los eventos salen de ese color; con varios, al azar entre ellos) o el de la marca. Si el día ya tiene evento, se abre el formulario con él.
+- **R7b. Limpieza.** En Ajustes, «Eliminar todos los eventos» borra de golpe todos los eventos del calendario (también el forzado y el de prueba), tras **doble confirmación** en dos modales. Ajustes se organiza en secciones plegables por tema: Aspecto del calendario, Vista del calendario, Eventos del calendario, Nombre e icono de la app y Guía e instrucciones.
 - **R8. Forzado.** Al guardar el evento en el **día clave** (R9), la app inserta/sustituye en el **día de cumpleaños** deducido
   un evento «Feliz cumpleaños» cuyo texto incluye la carta (R10). Si el día ya tenía evento, se sustituye.
   Si luego el mago modifica el evento del día clave, el forzado se recalcula.

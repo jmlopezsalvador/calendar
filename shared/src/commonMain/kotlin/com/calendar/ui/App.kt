@@ -58,6 +58,7 @@ fun CalendarRoot(prefs: KeyValueStore, platform: PlatformActions = NoPlatformAct
                     version++
                     n
                 },
+                onDeleteAll = { val n = repo.all().size; repo.clear(); version++; n },
                 canRename = platform.canRename, restartsApp = platform.restartsApp,
                 onApplyIdentity = { n, i ->
                     val nuevo = settings.copy(appName = n, appIcon = i)
